@@ -113,6 +113,15 @@ whether an item is done, use the matching prompt further down.
 - [ ] A way for users to reach you (support email or feedback button)
 - [ ] A README that says how to run, deploy and find every account the app
       uses
+- [ ] A security contact address is published (ideally in
+      `/.well-known/security.txt`)
+
+**Only if it applies**
+
+- [ ] Teams: tested as a member of company A that company B's data can't be
+      reached
+- [ ] Mobile: no secret keys inside the app, and a minimum-supported-version
+      check so you can make people update
 
 ---
 

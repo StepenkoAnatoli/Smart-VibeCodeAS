@@ -22,6 +22,9 @@ jobs:
       - name: Links inside the repo and reel term coverage
         run: python3 scripts/check_guide.py
 
+      - name: The one-page version is up to date
+        run: python3 scripts/build_page.py --check
+
       - name: Outside links (weekly and manual runs only)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         run: python3 scripts/check_guide.py --external

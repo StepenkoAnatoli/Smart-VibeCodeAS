@@ -1,0 +1,438 @@
+<title>Missing Knowledge for Vibe Coders</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Every term from the viral &quot;Who's gonna tell vibe coders about...&quot; list, explained for people who don't code, plus what the list left out.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Kalam:wght@700&display=swap">
+<style>
+/* Layout: one reading column on light-blue "list paper"; a sticky bar holds search, priority filters and the chapter menu. */
+:root {
+  --paper: #edf2f8;
+  --surface: #f8fafd;
+  --ink: #18212f;
+  --muted: #566276;
+  --rule: #c8d2e1;
+  --marker: #c12a30;
+  --now: #c12a30;
+  --soon: #9a5c06;
+  --later: #5a677b;
+  --code-bg: #e2e9f2;
+  --focus: #1f5fbf;
+  --font-hand: "Kalam", "Comic Neue", "Segoe Print", cursive;
+  --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --hdr: 7.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e131b; --surface: #151c27; --ink: #e2e8f1; --muted: #9ba7b8; --rule: #2a3446;
+    --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0e131b; --surface: #151c27; --ink: #e2e8f1; --muted: #9ba7b8; --rule: #2a3446;
+  --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--paper);
+}
+.wrap { max-width: 44rem; margin-inline: auto; }
+a { color: var(--ink); text-decoration-color: var(--marker); text-underline-offset: 0.18em; }
+a:hover { color: var(--marker); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+/* Opening */
+.intro { padding-block: 2.5rem 1.5rem; display: grid; gap: 0.75rem; }
+.eyebrow {
+  font: 600 0.75rem/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.intro h1 {
+  margin: 0; font: 700 clamp(2.1rem, 7vw, 3.1rem)/1.1 var(--font-hand); color: var(--marker);
+  text-wrap: balance;
+}
+.intro p { margin: 0; max-width: 36rem; }
+.facts { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; font: 400 0.875rem/1.4 var(--font-mono); color: var(--muted); }
+
+/* Sticky tools */
+.tools {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--paper); border-bottom: 1px solid var(--rule);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.tools-inner { max-width: 44rem; margin-inline: auto; padding-block: 0.75rem 0.5rem; display: grid; gap: 0.6rem; }
+.find { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.search { flex: 1 1 14rem; min-width: 0; position: relative; }
+.search input {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 1rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 0.55rem 0.75rem;
+}
+.search input::placeholder { color: var(--muted); }
+.chips { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.chip {
+  font: 600 0.8125rem/1 var(--font-body); color: var(--ink); background: transparent; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 0.5rem 0.75rem;
+  display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: currentColor; flex: none; }
+.chip .dot.now, .pill.now .dot { background: var(--now); }
+.chip .dot.soon, .pill.soon .dot { background: var(--soon); }
+.chip .dot.later, .pill.later .dot { background: var(--later); }
+.chapters {
+  display: flex; gap: 1.1rem; overflow-x: auto; scrollbar-width: none; white-space: nowrap;
+  font: 600 0.875rem/1 var(--font-body); padding-bottom: 0.25rem;
+}
+.chapters::-webkit-scrollbar { display: none; }
+.chapters a { text-decoration: none; color: var(--muted); padding-block: 0.35rem; border-bottom: 2px solid transparent; }
+.chapters a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--marker); }
+.status { font: 400 0.8125rem/1.3 var(--font-mono); color: var(--muted); }
+.status:empty { display: none; }
+.status button {
+  font: inherit; color: var(--marker); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline;
+}
+
+/* Chapters */
+.chapter { padding-top: 1rem; }
+.chapter-tag { display: none; font: 600 0.75rem/1.2 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding-top: 1.5rem; }
+body.filtering .chapter-tag { display: block; }
+h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75rem); }
+.chapter h1 { font: 700 clamp(1.7rem, 5vw, 2.2rem)/1.15 var(--font-hand); color: var(--marker); margin: 2.25rem 0 0.75rem; }
+.chapter h2 { font-size: 1.45rem; line-height: 1.25; margin: 2.25rem 0 0.5rem; }
+.chapter h3 { font-size: 1.2rem; line-height: 1.3; margin: 0 0 0.6rem; }
+.chapter p, .chapter ul, .chapter ol, .chapter blockquote { margin-block: 0 0.9rem; }
+.chapter li { margin-block: 0.25rem; }
+.chapter li > ul, .chapter li > ol { margin-block: 0.25rem 0; }
+.chapter hr { border: 0; border-top: 1px solid var(--rule); margin-block: 2rem; }
+.chapter blockquote { border-left: 3px solid var(--rule); margin-inline: 0; padding: 0.1rem 0 0.1rem 1rem; color: var(--muted); }
+.chapter strong { font-weight: 700; }
+.chapter code { font: 400 0.86em/1.4 var(--font-mono); background: var(--code-bg); border-radius: 4px; padding: 0.1em 0.3em; overflow-wrap: anywhere; }
+.chapter pre {
+  position: relative; margin: 0 0 1rem; background: var(--code-bg); border-radius: 8px;
+  padding: 2.4rem 1rem 1rem; overflow-x: auto;
+}
+.chapter pre code { background: none; padding: 0; font-size: 0.84rem; line-height: 1.55; overflow-wrap: normal; white-space: pre; }
+.copy {
+  position: absolute; top: 0.5rem; right: 0.5rem; font: 600 0.75rem/1 var(--font-mono);
+  color: var(--ink); background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 0.4rem 0.6rem; cursor: pointer;
+}
+.table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+.chapter table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+.chapter th, .chapter td { text-align: left; vertical-align: top; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+.chapter th { font-weight: 700; white-space: nowrap; }
+.chapter li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4rem; }
+.chapter input[type="checkbox"] { width: 1.05rem; height: 1.05rem; margin: 0 0.5rem 0 0; vertical-align: -0.15em; accent-color: var(--marker); cursor: pointer; }
+
+/* Entries (one term each) */
+.entry { border-top: 1px solid var(--rule); padding-block: 1.25rem 0.25rem; }
+.entry-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin-bottom: 0.4rem; }
+.num { font: 600 0.75rem/1 var(--font-mono); letter-spacing: 0.04em; color: var(--muted); }
+.pill {
+  display: inline-flex; align-items: center; gap: 0.4rem; font: 600 0.75rem/1.2 var(--font-mono);
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted);
+}
+.pill.now { color: var(--now); }
+.pill.soon { color: var(--soon); }
+.pill .rest { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--muted); }
+.block-h2 h2 { margin-top: 2rem; }
+
+.empty { padding-block: 3rem; text-align: center; color: var(--muted); }
+.foot { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="wrap" id="top">
+  <header class="intro">
+    <div class="eyebrow">Missing Knowledge for Vibe Coders</div>
+    <h1>Who's gonna tell vibe coders about…</h1>
+    <p>Every term from the viral list, explained for people who build with AI and don't read code. Plus what the list left out about launching, running and debugging an app.</p>
+    <div class="facts"><span>111 terms from the list</span><span>6 chapters</span><span>Now · Soon · Later</span></div>
+  </header>
+</div>
+
+<div class="tools" id="tools">
+  <div class="tools-inner">
+    <div class="find">
+      <label class="search" for="q">
+        <span hidden>Search the guide</span>
+        <input id="q" type="search" placeholder="Search: CORS, backups, 429…" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="chips" role="group" aria-label="Show by priority">
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" type="button" data-filter="now" aria-pressed="false"><span class="dot now"></span>Now</button>
+        <button class="chip" type="button" data-filter="soon" aria-pressed="false"><span class="dot soon"></span>Soon</button>
+        <button class="chip" type="button" data-filter="later" aria-pressed="false"><span class="dot later"></span>Later</button>
+      </div>
+    </div>
+    <nav class="chapters" id="chapters" aria-label="Chapters"></nav>
+    <div class="status" id="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<main class="wrap" id="guide"></main>
+<div class="wrap">
+  <p class="empty" id="empty" hidden>Nothing matches that. Try a shorter word, or switch the filter back to All.</p>
+  <p class="foot">Based on the list by @nataindata. The guide's source lives in the Missing-Knowedge-vibecoders repository on GitHub; this page is built from it.</p>
+</div>
+
+<script type="application/json" id="guide-data">__GUIDE_DATA__</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById("guide-data").textContent);
+  const guide = document.getElementById("guide");
+  const nav = document.getElementById("chapters");
+  const input = document.getElementById("q");
+  const statusEl = document.getElementById("status");
+  const emptyEl = document.getElementById("empty");
+  const chips = [...document.querySelectorAll(".chip")];
+  const LABELS = { "🔴": "now", "🟡": "soon", "⚪": "later" };
+  const WORDS = { "🔴": "Now", "🟡": "Soon", "⚪": "Later" };
+
+  const store = {
+    get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+    set(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* storage unavailable */ } },
+  };
+  const slug = (s) => s.trim().toLowerCase().replace(/[^\p{L}\p{N}\p{M}_\- ]/gu, "").replace(/ /g, "-");
+  const norm = (s) => s.toLowerCase().normalize("NFKD").replace(/\s+/g, " ");
+
+  const chapters = [];
+  let blockCount = 0;
+
+  for (const ch of DATA.chapters) {
+    const section = document.createElement("section");
+    section.className = "chapter";
+    section.id = ch.id;
+    section.innerHTML = marked.parse(ch.md);
+
+    // Heading anchors, matching GitHub's scheme, prefixed by chapter.
+    const seen = {};
+    section.querySelectorAll("h1, h2, h3, h4").forEach((h) => {
+      const base = slug(h.textContent);
+      const n = seen[base] || 0;
+      seen[base] = n + 1;
+      h.id = ch.id + "-" + (n ? base + "-" + n : base);
+    });
+
+    // Group content into blocks that start at each h1/h2/h3.
+    const nodes = [...section.childNodes];
+    section.textContent = "";
+    const tag = document.createElement("div");
+    tag.className = "chapter-tag";
+    tag.textContent = ch.label;
+    section.append(tag);
+    const blocks = [];
+    let block = { el: document.createElement("div"), kind: "intro" };
+    const push = () => { if (block.el.childNodes.length) { section.append(block.el); blocks.push(block); } };
+    for (const node of nodes) {
+      if (node.nodeType === 1 && /^H[123]$/.test(node.tagName)) {
+        push();
+        block = { el: document.createElement("div"), kind: node.tagName.toLowerCase() };
+      }
+      block.el.append(node);
+    }
+    push();
+
+    for (const b of blocks) {
+      b.el.className = "block-" + b.kind;
+      const h = b.el.firstElementChild;
+      if (b.kind === "h3" && h) decorateEntry(b, h, ch.id === "ch1");
+      b.text = norm(b.el.textContent);
+      blockCount++;
+    }
+
+    guide.append(section);
+    chapters.push({ id: ch.id, el: section, blocks });
+
+    const a = document.createElement("a");
+    a.href = "#" + ch.id;
+    a.textContent = ch.label;
+    a.dataset.ch = ch.id;
+    nav.append(a);
+  }
+
+  function decorateEntry(b, h, isGlossary) {
+    const text = h.textContent;
+    const cut = text.indexOf(" — ");
+    if (cut < 0) return;
+    const name = text.slice(0, cut);
+    let rest = text.slice(cut + 3).trim();
+    const first = [...rest].find((c) => LABELS[c]);
+    if (!first) return;
+    b.label = LABELS[first];
+    rest = rest.replace(first, "").trim();
+    const main = rest.replace(/\s*\(.*$/, "");
+    const note = (rest.match(/\((.*)\)\s*$/) || [, ""])[1].replace(/🔴|🟡|⚪/gu, (m) => WORDS[m]);
+    h.textContent = name;
+    b.el.classList.add("entry");
+    const meta = document.createElement("div");
+    meta.className = "entry-meta";
+    const num = isGlossary ? (DATA.numbers[name] || DATA.numbers[name.replace(/\s*\(.*$/, "")]) : undefined;
+    if (num) {
+      const n = document.createElement("span");
+      n.className = "num";
+      n.textContent = "No. " + num;
+      meta.append(n);
+    }
+    const pill = document.createElement("span");
+    pill.className = "pill " + b.label;
+    pill.innerHTML = '<span class="dot"></span>';
+    pill.append(main || WORDS[first]);
+    if (note) {
+      const r = document.createElement("span");
+      r.className = "rest";
+      r.textContent = note;
+      pill.append(r);
+    }
+    meta.append(pill);
+    b.el.insertBefore(meta, h);
+  }
+
+  // Tables scroll on their own; outside links open in a new tab.
+  guide.querySelectorAll("table").forEach((t) => {
+    const w = document.createElement("div");
+    w.className = "table-wrap";
+    t.replaceWith(w);
+    w.append(t);
+  });
+  guide.querySelectorAll('a[href^="http"]').forEach((a) => { a.target = "_blank"; a.rel = "noopener"; });
+
+  // Copy buttons on every prompt and code block.
+  guide.querySelectorAll("pre").forEach((pre) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.textContent = "Copy";
+    btn.addEventListener("click", () => {
+      const code = pre.querySelector("code") || pre;
+      const done = (msg) => { btn.textContent = msg; setTimeout(() => { btn.textContent = "Copy"; }, 1800); };
+      const select = () => {
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const sel = getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        done("Selected: copy it");
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code.textContent.replace(/\n$/, "")).then(() => done("Copied"), select);
+      } else {
+        select();
+      }
+    });
+    pre.append(btn);
+  });
+
+  // Checklist ticks are remembered in this browser only.
+  const ticks = document.querySelectorAll('#ch5 input[type="checkbox"]');
+  ticks.forEach((box, i) => {
+    box.disabled = false;
+    box.id = "tick-" + i;
+    box.checked = store.get("mkvc-tick-" + i) === "1";
+    box.addEventListener("change", () => store.set("mkvc-tick-" + i, box.checked ? "1" : "0"));
+  });
+
+  // Search and filters.
+  let filter = "all";
+  function apply() {
+    const q = norm(input.value.trim());
+    const active = q.length > 0 || filter !== "all";
+    document.body.classList.toggle("filtering", active);
+    let shown = 0;
+    for (const ch of chapters) {
+      let inChapter = 0;
+      for (const b of ch.blocks) {
+        let ok = true;
+        if (active) {
+          ok = (b.kind === "h2" || b.kind === "h3")
+            && (filter === "all" || b.label === filter)
+            && (!q || b.text.includes(q));
+        }
+        b.el.hidden = !ok;
+        if (ok) inChapter++;
+      }
+      ch.el.hidden = active && inChapter === 0;
+      if (active) shown += inChapter;
+    }
+    emptyEl.hidden = !(active && shown === 0);
+    statusEl.textContent = "";
+    if (active) {
+      const what = filter === "all" ? "" : " marked " + filter[0].toUpperCase() + filter.slice(1);
+      statusEl.append(shown + " section" + (shown === 1 ? "" : "s") + what + (q ? " matching “" + input.value.trim() + "”" : "") + ". ");
+      const clear = document.createElement("button");
+      clear.type = "button";
+      clear.textContent = "Show everything";
+      clear.addEventListener("click", reset);
+      statusEl.append(clear);
+    }
+    store.set("mkvc-filter", filter);
+  }
+  function setFilter(f) {
+    filter = f;
+    chips.forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.filter === f)));
+  }
+  function reset() { input.value = ""; setFilter("all"); apply(); }
+
+  chips.forEach((c) => c.addEventListener("click", () => { setFilter(c.dataset.filter); apply(); }));
+  let timer;
+  input.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(apply, 120); });
+
+  // In-page links: clear filters if the target is hidden, then scroll to it.
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
+    if (!target) return;
+    e.preventDefault();
+    if (document.body.classList.contains("filtering")) reset();
+    target.scrollIntoView({ block: "start" });
+  });
+
+  // Keep heading offsets clear of the sticky bar, and mark the chapter in view.
+  const tools = document.getElementById("tools");
+  const setHdr = () => document.documentElement.style.setProperty("--hdr", tools.offsetHeight + "px");
+  setHdr();
+  if ("ResizeObserver" in window) new ResizeObserver(setHdr).observe(tools);
+  const links = [...nav.querySelectorAll("a")];
+  function markCurrent() {
+    const line = tools.getBoundingClientRect().bottom + 8;
+    let current = chapters[0].id;
+    for (const ch of chapters) if (!ch.el.hidden && ch.el.getBoundingClientRect().top <= line) current = ch.id;
+    links.forEach((l) => {
+      const on = l.dataset.ch === current;
+      l.setAttribute("aria-current", String(on));
+      if (on && l.scrollIntoViewIfNeeded) l.scrollIntoViewIfNeeded(false);
+    });
+  }
+  let ticking = false;
+  addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { markCurrent(); ticking = false; });
+  }, { passive: true });
+
+  const saved = store.get("mkvc-filter");
+  if (["now", "soon", "later"].includes(saved)) setFilter(saved);
+  apply();
+  markCurrent();
+  if (location.hash) {
+    const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (el) { reset(); el.scrollIntoView({ block: "start" }); }
+  }
+})();
+</script>

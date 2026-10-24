@@ -22,13 +22,20 @@ for a long time.
    triage, what your AI tends to miss, and a learning path.
 4. **[Beyond the reel](guide/03-beyond-the-reel.md)**: what the reel left out
    about launching and running an app: securing AI features, taking payments,
-   legal basics, testing, launch day, and maintenance after launch.
+   legal basics, testing, launch day, maintenance after launch, and what
+   changes if you sell to teams or ship a mobile app.
 5. **[Debugging with AI](guide/04-debugging-with-ai.md)**: how to read an error,
    find where it really happened, give your AI the right clues, and escape the
    loop where every "fix" brings a new error.
 6. **[Checklist and AI prompts](guide/05-checklist-and-ai-prompts.md)**: a
    pre-launch checklist and copy-paste prompts that make your AI check these
    things for you.
+
+## Read it on your phone
+
+`site/index.html` is the whole guide on one page, with search, Now/Soon/Later
+filters, copy buttons on every prompt, and a checklist that remembers your
+ticks. It's built from the chapters by `scripts/build_page.py`.
 
 ## The 30-second version
 
@@ -56,4 +63,8 @@ checks that outside links still load. To run it yourself:
 ```
 python3 scripts/check_guide.py              # links inside the repo + term coverage
 python3 scripts/check_guide.py --external   # also check outside links
+python3 scripts/build_page.py               # rebuild site/index.html after editing a chapter
 ```
+
+The check also fails if `site/index.html` is out of date, so rebuild it in the
+same change as any chapter edit.
