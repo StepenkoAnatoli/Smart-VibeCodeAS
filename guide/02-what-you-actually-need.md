@@ -51,7 +51,7 @@ matter more than most of what's on it.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](03-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](04-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -68,6 +68,11 @@ matter more than most of what's on it.
 12. **Separate development and production** *(not in the reel)*.
     Use a separate database and separate keys while building. Never let an AI
     agent run commands against production.
+
+The reel also leaves out whole areas a launch depends on: securing your AI
+features (prompt injection), testing, payments, privacy law, free-tier limits
+on launch day, and maintenance afterwards. Those are in
+[Beyond the reel](03-beyond-the-reel.md).
 
 Do these 12 and you've covered the disasters that most often hit vibe-coded
 apps: leaked keys, open databases, surprise bills and lost data.
@@ -145,7 +150,7 @@ volunteers the rest.
   alerts, tests.
 
 The fix is cheap: know the words, then ask. The
-[checklist and copy-paste prompts](03-checklist-and-ai-prompts.md) do exactly
+[checklist and copy-paste prompts](04-checklist-and-ai-prompts.md) do exactly
 that.
 
 ---
@@ -181,4 +186,4 @@ Then quiz me with 3 questions.
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](03-checklist-and-ai-prompts.md)
+Next: [Beyond the reel: launching and running your app](03-beyond-the-reel.md)

@@ -20,7 +20,10 @@ for a long time.
    means for you.
 3. **[What you actually need](guide/02-what-you-actually-need.md)**: the honest
    triage, what your AI tends to miss, and a learning path.
-4. **[Checklist and AI prompts](guide/03-checklist-and-ai-prompts.md)**: a
+4. **[Beyond the reel](guide/03-beyond-the-reel.md)**: what the reel left out
+   about launching and running an app: securing AI features, taking payments,
+   legal basics, testing, launch day, and maintenance after launch.
+5. **[Checklist and AI prompts](guide/04-checklist-and-ai-prompts.md)**: a
    pre-launch checklist and copy-paste prompts that make your AI check these
    things for you.
 
