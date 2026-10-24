@@ -46,6 +46,8 @@ you *which questions to look up* for where you and your users live.
 If your app sends anything to an AI model, there's a whole category of risk
 the reel never mentions. The industry has its own list for it, the
 [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/).
+This section covers the risks; [Building AI features](08-building-ai-features.md)
+covers how these features work, what they cost, and how to test them.
 
 ### Prompt injection — 🔴 Now
 
@@ -81,8 +83,10 @@ it.
 **What it is:** Each AI call costs money, and one heavy or malicious user can
 cost more than they pay you.
 
-**Do:** Give each user a quota (messages per day, or tokens per month), set
-`max_tokens` on every call, use cheaper models for simple jobs, and track AI
+**Do:** Give each user a quota (messages per day, or tokens per month), set a
+maximum output length on every call (`max_tokens` on Claude,
+`max_completion_tokens` or `max_output_tokens` on OpenAI; your AI knows the
+name for your provider), use cheaper models for simple jobs, and track AI
 spend per user next to what that user pays you.
 
 ### Sending user data to AI providers — 🟡 Soon
@@ -133,11 +137,13 @@ Turnstile on sign-up and login, and rate-limit both (see *Rate Limiting*).
 
 ### Login cookies and sessions — 🟡 Soon
 
-Login cookies should be set as `HttpOnly` (JavaScript can't read them, so XSS
-can't steal them), `Secure` (HTTPS only) and `SameSite`. Logging out should
-really end the session, and a "log out of all devices" button helps after a
-stolen laptop. Auth providers mostly handle this; check it if your AI wrote
-custom login code.
+Where you control login cookies (custom login code), set them as `HttpOnly`
+(JavaScript can't read them, so XSS can't steal them), `Secure` (HTTPS only)
+and `SameSite`. Some popular providers, including Supabase and Firebase, keep
+the session where JavaScript can read it on purpose. That's normal for them;
+don't try to change it. It does mean that preventing XSS is what protects your
+users' sessions. Logging out should really end the session, and a "log out of
+all devices" button helps after a stolen laptop.
 
 ### Admin powers and audit logs — 🟡 Soon
 
@@ -174,8 +180,8 @@ and leak details to attackers.
 ### A staging or preview environment — 🟡 Soon
 
 A copy of your app where you test changes before real users see them. Vercel
-and Netlify create a *preview deployment* for every branch or pull request, for
-free. Pair it with a separate test database and your payment provider's test
+and Netlify create a *preview deployment* for every branch or pull request,
+including on their free plans. Pair it with a separate test database and your payment provider's test
 mode.
 
 ### Pagination — 🟡 Soon
@@ -406,7 +412,10 @@ Every free plan has limits: database size, emails per day, function calls,
 bandwidth, AI requests per minute. Some free projects also *pause* after a
 period of inactivity. A launch spike can hit a limit and take your site down
 at the worst moment. **Do:** List every service you use, its limits, and what
-happens when you hit them. Upgrade or raise limits before a big launch.
+happens when you hit them. Upgrade or raise limits before a big launch. Also
+read each free plan's **terms**: some don't allow commercial use. Vercel's free
+Hobby plan, for example, is for personal, non-commercial projects, so an app
+that takes money needs the paid plan.
 
 ### Load testing — 🟡 Soon
 
@@ -474,7 +483,8 @@ nothing about your project.
 
 Work on a *branch*, open a *pull request*, check it (and its preview deploy),
 then merge to `main`, which deploys. Turn on branch protection so nothing
-reaches `main` without passing checks. Never fix things by editing production
+reaches `main` without passing checks (free for public repos; private repos
+need a paid GitHub plan such as Pro). Never fix things by editing production
 directly.
 
 ### Technical debt — 🟡 Soon

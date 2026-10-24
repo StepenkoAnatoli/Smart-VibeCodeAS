@@ -249,9 +249,11 @@ from evidence.
 
 1. **Stop after three failed attempts at the same bug.** More attempts in the
    same conversation usually make it worse.
-2. **Undo.** Go back to the last commit where things worked
-   (`git restore .` throws away uncommitted changes; ask the AI to help if
-   you need to go back further). Every loop leaves broken code behind.
+2. **Undo.** Go back to the last commit where things worked. The safest way
+   is `git stash --include-untracked`: it puts every change, including new
+   files, aside instead of deleting it, and `git stash pop` brings it back.
+   Ask the AI to help if you need to go back further than the last commit.
+   Every loop leaves broken code behind.
 3. **Start a fresh conversation.** Long chats fill up with wrong guesses the AI
    keeps building on. Paste in a short summary using the template from
    section 7, including what didn't work.
@@ -367,4 +369,4 @@ symptom or fixing the cause?
 
 ---
 
-Next: [How vibe-coded apps break: the common stories](08-how-vibe-coded-apps-break.md)
+Next: [How vibe-coded apps break: the common stories](10-how-vibe-coded-apps-break.md)

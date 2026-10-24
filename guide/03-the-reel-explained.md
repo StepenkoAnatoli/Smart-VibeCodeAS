@@ -55,8 +55,10 @@ key for *this* room.
 the industry's standard list of web app risks. In the 2025 edition OWASP
 reports that every application it tested had some form of it. AI code often
 checks "is someone logged in?" and forgets "is this *their* record?". With
-Supabase, the fix is Row Level Security turned on for every table; with
-Firebase, real Security Rules (not "test mode"). Test it yourself: log in as
+Supabase, the fix is Row Level Security turned on for every table, **with
+policies that check the row belongs to the logged-in user** (for example
+`auth.uid() = user_id`), never "allow everyone" policies; with Firebase, real
+Security Rules (not "test mode"). Test it yourself: log in as
 user A and try to read user B's data.
 
 ### SQL Injection — 🔴 Now
@@ -151,7 +153,7 @@ country instead of checking you himself. A JWT is a festival wristband: signed
 so it can't be faked, but whoever holds it gets in until it expires.
 
 **What it means for you:** Use an auth provider (Supabase Auth, Clerk, Auth0,
-Firebase Auth, Auth.js) instead of building login and password storage
+Firebase Auth, Better Auth) instead of building login and password storage
 yourself. Common AI mistakes: reading a JWT without *verifying its signature*,
 tokens that never expire, and putting private information inside a JWT. Anyone
 can read what's inside one; it's encoded, not encrypted.
@@ -202,8 +204,10 @@ only the permissions it needs.
 **Picture it:** The dishwasher gets a key to the kitchen, not to the safe.
 
 **What it means for you:** Prefer limited keys where a service offers them.
-Supabase example: the `anon` key is meant to be public, but the `service_role`
-key ignores all security rules and must only live on the server. Turn on
+Supabase example: the *publishable* key (`sb_publishable_...`, called the
+`anon` key in older projects) is meant to be public, but the *secret* key
+(`sb_secret_...`, formerly `service_role`) ignores all security rules and must
+only live on the server. Turn on
 two-factor login (2FA) for GitHub, your host, your cloud and your domain
 registrar.
 
@@ -895,8 +899,10 @@ nothing can hit you with a giant surprise bill.
 
 **What it means for you:**
 
-- Set billing alerts and hard spending caps wherever a provider allows them:
-  AI API dashboards, cloud providers, hosting.
+- Set billing alerts everywhere, and hard spending caps wherever a provider
+  offers them: AI API dashboards, cloud providers, hosting. Careful: on Google
+  Cloud and AWS a "budget" only emails you; it doesn't stop spending. For AI
+  APIs, prepaid credits with auto-recharge turned off work as a hard cap.
 - Rate-limit every endpoint that costs money.
 - Use cheaper AI models for simple jobs, and cache repeated answers.
 - Watch for runaway loops: a bug that calls a paid API or function in an
@@ -984,7 +990,8 @@ controls where your app's address points.
 Two basic ways to send data over the internet.
 
 - **TCP** is reliable: everything arrives, in order, or you're told it failed.
-  The web, email and file downloads use it. Like a phone call where you say
+  Most of the web, email and file downloads use it (the newest web version,
+  HTTP/3, gets the same reliability on top of UDP). Like a phone call where you say
   "sorry, can you repeat that?"
 - **UDP** is fast and fire-and-forget: some pieces may get lost or arrive out of
   order. Video calls, online games and DNS lookups use it. Like shouting across

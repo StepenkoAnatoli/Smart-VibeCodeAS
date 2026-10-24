@@ -1,0 +1,32 @@
+name: Suggest a term or topic
+description: Something vibe coders should know that the guide doesn't cover yet.
+title: "Topic: "
+labels: ["suggestion"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: The term or topic
+      placeholder: "Database connection limits on serverless"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it matter to someone building with AI?
+      description: What goes wrong when people don't know it? A real story (without names) is ideal.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How soon does a beginner need it?
+      options:
+        - Now (before launching with logins, payments or user data)
+        - Soon (once real people use the app)
+        - Later (big-system topic)
+        - Not sure
+  - type: input
+    id: source
+    attributes:
+      label: Good source to learn from (optional)

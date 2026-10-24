@@ -38,20 +38,20 @@ matter more than most of what's on it.
    None in frontend code. If one leaks, replace it at the provider right away.
 
 4. **Authentication**: don't build login yourself.
-   Use Supabase Auth, Clerk, Auth0, Firebase Auth or Auth.js.
+   Use Supabase Auth, Clerk, Auth0, Firebase Auth or Better Auth.
 
 5. **Authorization / access control** *(not in the reel by name; the #1
    real-world risk)*: being logged in isn't enough.
    Every route and database rule must check that the user owns the thing
    they're asking for. On Supabase, turn on Row Level Security for every
-   table; on Firebase, write real Security Rules. Then test it: log in as user
+   table, with policies that check ownership; on Firebase, write real Security Rules. Then test it: log in as user
    A and try to read user B's data by changing an ID.
 
 6. **Data validation on the server**: never trust what arrives.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](09-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](12-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -151,8 +151,8 @@ volunteers the rest.
 
 The fix is cheap: know the words, then ask. [Vibe coding well](02-vibe-coding-well.md)
 covers the working habits that stop most of these problems before they start,
-[How vibe-coded apps break](08-how-vibe-coded-apps-break.md) shows what happens
-when they're missing, and the [checklist and copy-paste prompts](09-checklist-and-ai-prompts.md)
+[How vibe-coded apps break](10-how-vibe-coded-apps-break.md) shows what happens
+when they're missing, and the [checklist and copy-paste prompts](12-checklist-and-ai-prompts.md)
 check for them.
 
 ---
@@ -170,7 +170,8 @@ Go one step at a time, and practice each step on a tiny app of your own.
    and the terminal.
 3. **Working with AI:** [Vibe coding well](02-vibe-coding-well.md). Write a
    spec and a rules file for your next project before any code.
-4. **Logins and permissions:** build a tiny app with login, then prove that
+4. **Logins and permissions:** read [Logins, done right](07-logins-done-right.md),
+   build a tiny app with login, then work through its test list: prove that
    user A can't see user B's data.
 5. **Databases:** [Your database, explained](06-your-database.md), then basic
    SQL, and doing one real backup *and restore*.
@@ -180,7 +181,10 @@ Go one step at a time, and practice each step on a tiny app of your own.
    (start with SQL injection and XSS).
 7. **Running it for real:** error tracking, an uptime monitor, a billing
    alert, and rolling back a deploy on purpose so you know how.
-8. **After that:** pick Tier 2 items as you run into them.
+8. **If your app uses AI:** [Building AI features](08-building-ai-features.md),
+   especially tokens and cost, and testing AI output.
+9. **After that:** pick Tier 2 items as you run into them, and take the quiz
+   on the one-page version of this guide to check what stuck.
 
 A good way to learn any single term is to ask your AI:
 

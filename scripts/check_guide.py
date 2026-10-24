@@ -8,6 +8,7 @@ Usage:
 Exits non-zero if anything is broken. Uses only the standard library.
 """
 import argparse
+import json
 import re
 import sys
 import time
@@ -18,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = [ROOT / "README.md", *sorted((ROOT / "guide").glob("*.md"))]
 GLOSSARY = ROOT / "guide" / "03-the-reel-explained.md"
+QUIZ = ROOT / "quiz" / "questions.json"
 
 # The 111 terms from the original @nataindata list, in order.
 REEL_TERMS = [
@@ -59,16 +61,66 @@ def without_code(text):
     return FENCE_RE.sub("", text)
 
 
-def anchors(path):
-    """The heading anchors GitHub generates for a Markdown file."""
+def headings(path):
+    """(title, anchor) for every heading, with the anchors GitHub generates."""
     seen = {}
-    result = set()
+    result = []
     for _, title in HEADING_RE.findall(without_code(path.read_text())):
         slug = re.sub(r"[^\w\- ]", "", title.strip().lower()).replace(" ", "-")
         count = seen.get(slug, 0)
         seen[slug] = count + 1
-        result.add(slug if count == 0 else f"{slug}-{count}")
+        result.append((title.strip(), slug if count == 0 else f"{slug}-{count}"))
     return result
+
+
+def anchors(path):
+    """The heading anchors GitHub generates for a Markdown file."""
+    return {anchor for _, anchor in headings(path)}
+
+
+def heading_anchor(path, name):
+    """The anchor of the one heading whose name (before any " — " label) is `name`."""
+    matches = [anchor for title, anchor in headings(path) if title.split(" — ")[0] == name]
+    if len(matches) != 1:
+        raise LookupError(f"{len(matches)} headings named '{name}' in {path.name}")
+    return matches[0]
+
+
+def load_quiz():
+    return json.loads(QUIZ.read_text())
+
+
+def check_quiz():
+    if not QUIZ.exists():
+        return []
+    rel = QUIZ.relative_to(ROOT)
+    try:
+        questions = load_quiz()
+    except json.JSONDecodeError as error:
+        return [f"{rel}: not valid JSON ({error})"]
+    problems, ids = [], set()
+    for n, q in enumerate(questions, 1):
+        where = f"{rel}: question {n} ({q.get('id', 'no id')})"
+        missing = [k for k in ("id", "q", "options", "answer", "why", "file", "heading") if k not in q]
+        if missing:
+            problems.append(f"{where}: missing {', '.join(missing)}")
+            continue
+        if q["id"] in ids:
+            problems.append(f"{where}: duplicate id")
+        ids.add(q["id"])
+        if not 2 <= len(q["options"]) <= 5 or len(set(q["options"])) != len(q["options"]):
+            problems.append(f"{where}: needs 2-5 different options")
+        if not isinstance(q["answer"], int) or not 0 <= q["answer"] < len(q["options"]):
+            problems.append(f"{where}: answer must be the index of one of the options")
+        target = ROOT / "guide" / q["file"]
+        if not target.exists():
+            problems.append(f"{where}: no chapter {q['file']}")
+            continue
+        try:
+            heading_anchor(target, q["heading"])
+        except LookupError as error:
+            problems.append(f"{where}: {error}")
+    return problems
 
 
 def check_internal_links():
@@ -138,7 +190,7 @@ def main():
     parser.add_argument("--external", action="store_true", help="also check http(s) links")
     args = parser.parse_args()
 
-    problems = check_internal_links() + check_reel_terms()
+    problems = check_internal_links() + check_reel_terms() + check_quiz()
     warnings = []
     if args.external:
         external_problems, warnings = check_external_links()
@@ -151,7 +203,8 @@ def main():
     if problems:
         print(f"\n{len(problems)} problem(s) found.")
         return 1
-    print(f"OK: {len(DOCS)} files checked, all {len(REEL_TERMS)} reel terms covered"
+    quiz = f", {len(load_quiz())} quiz questions valid" if QUIZ.exists() else ""
+    print(f"OK: {len(DOCS)} files checked, all {len(REEL_TERMS)} reel terms covered{quiz}"
           + (", external links reachable." if args.external else "."))
     return 0
 
