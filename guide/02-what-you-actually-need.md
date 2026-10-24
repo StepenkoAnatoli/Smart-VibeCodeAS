@@ -14,8 +14,8 @@ It's half fair warning and half joke.
   teams and millions of users. Plenty of professional developers rarely touch
   them, and you don't need them to ship a good app.
 
-So you don't need to learn 100 things. You need to learn **about 12 things
-well**, **about 20 things roughly**, and know the rest exist.
+So you don't need to learn 111 things. You need to learn **about 12 things
+well**, **about 25 things roughly**, and know the rest exist.
 
 ---
 
@@ -51,7 +51,7 @@ matter more than most of what's on it.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](03-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](05-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -69,6 +69,11 @@ matter more than most of what's on it.
     Use a separate database and separate keys while building. Never let an AI
     agent run commands against production.
 
+The reel also leaves out whole areas a launch depends on: securing your AI
+features (prompt injection), testing, payments, privacy law, free-tier limits
+on launch day, and maintenance afterwards. Those are in
+[Beyond the reel](03-beyond-the-reel.md).
+
 Do these 12 and you've covered the disasters that most often hit vibe-coded
 apps: leaked keys, open databases, surprise bills and lost data.
 
@@ -79,21 +84,23 @@ apps: leaked keys, open databases, surprise bills and lost data.
 Learn these as you go. Each one is explained in
 [the reel, explained](01-the-reel-explained.md).
 
-- **Seeing what's happening:** logging, error tracking (Sentry), monitoring,
-  an uptime monitor with a health check, alerts, observability.
+- **Seeing what's happening:** logging, metrics, error tracking (Sentry),
+  monitoring, an uptime monitor with a health check, alerts, observability.
 - **The database:** migrations and schema versioning, indexing, N+1 queries,
   connection pooling (if you're on serverless), transactions for multi-step
-  changes.
+  changes, race conditions.
 - **Talking to other services:** timeouts, retries, exponential backoff,
   webhooks, idempotency. These move to Tier 1 if you take payments.
-- **Speed and cost:** caching and cache invalidation, latency, serverless
-  limits, cold starts.
-- **Shipping safely:** CI (automatic checks before deploy), knowing how to roll
-  back, semantic versioning, lockfiles, dependency hygiene.
+- **Speed and cost:** caching and cache invalidation, a CDN for images and
+  uploads, latency, serverless limits, cold starts.
+- **Shipping safely:** CI (automatic checks before deploy), rollbacks,
+  semantic versioning, lockfiles, dependency hygiene.
+- **Scheduled work:** cron jobs.
 - **The outside world:** DNS for your custom domain and email (SPF, DKIM,
   DMARC).
-- **More security:** CSRF, SSRF (if your server fetches URLs users give it),
-  IAM and least privilege.
+- **More security:** CORS, CSRF, SSRF (if your server fetches URLs users give
+  it), IAM and least privilege, JWT rotation (your auth provider should handle
+  it).
 - **Real-time** (only if you need it): WebSockets, or Server-Sent Events for
   streaming AI answers.
 - **When things go wrong:** a half-page disaster recovery plan, an incident
@@ -108,17 +115,19 @@ Learn these as you go. Each one is explained in
 | Docker | you move from Vercel/Netlify to your own server |
 | Kubernetes, Helm Charts, liveness & readiness probes | you have a team running many services (maybe never) |
 | Load balancing, reverse proxies, API gateways | you run your own servers instead of a platform |
+| Vertical & horizontal scaling, autoscaling, backpressure | one server can't keep up with your traffic |
 | Message queues, pub/sub, event-driven architecture, dead letter queues | you have background jobs that take minutes, or several services |
 | Optimistic & pessimistic locking | two users can grab the same last item, or edit the same thing |
-| Read replicas, replication, partitioning, failover, multi-region | one database can't keep up, or downtime costs real money |
+| Read replicas, replication, sharding, partitioning, failover, multi-region | one database can't keep up, or downtime costs real money |
 | Distributed transactions, Saga pattern, distributed locks, leader election | your data is spread across several services or databases |
 | CAP theorem, eventual consistency, network partitions, clock skew | same as above; also handy in interviews |
 | Feature flags, blue-green, canary and rolling deployments | you have enough users that a bad release really hurts |
-| SLOs, error budgets, on-call, distributed tracing | you have a team and paying customers with expectations |
+| SLOs, SLIs, error budgets, on-call, distributed tracing | you have a team and paying customers with expectations |
 | P99 / tail latency, throughput, query optimization | you start measuring performance seriously |
 | TCP vs UDP, HTTP/2 & HTTP/3, gRPC | you build real-time games, video, or internal services |
 | Infrastructure as Code, Terraform, build caching | your setup is too big to click together by hand |
-| WAF, DDoS protection, encryption at rest | mostly provided by your host already; just check the settings |
+| WAF, DDoS protection, encryption at rest, edge caching | mostly provided by your host already; just check the settings |
+| Memory leaks, garbage collection, thread safety | your server's memory keeps growing, or you write code that runs several threads |
 | Chaos engineering | you run a large system that must not go down |
 
 ---
@@ -141,7 +150,7 @@ volunteers the rest.
   alerts, tests.
 
 The fix is cheap: know the words, then ask. The
-[checklist and copy-paste prompts](03-checklist-and-ai-prompts.md) do exactly
+[checklist and copy-paste prompts](05-checklist-and-ai-prompts.md) do exactly
 that.
 
 ---
@@ -177,4 +186,4 @@ Then quiz me with 3 questions.
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](03-checklist-and-ai-prompts.md)
+Next: [Beyond the reel: launching and running your app](03-beyond-the-reel.md)

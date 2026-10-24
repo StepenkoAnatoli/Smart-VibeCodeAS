@@ -37,6 +37,17 @@ whether an item is done, use the matching prompt further down.
       `innerHTML`) without a sanitizer
 - [ ] File uploads have size and type limits
 
+**AI features** (if your app calls an AI model)
+
+- [ ] Permissions are checked in code, never only by instructions in the prompt
+- [ ] Risky actions the AI can trigger (sending, deleting, paying) need the
+      user to confirm
+- [ ] No secrets in the system prompt
+- [ ] AI output is shown as text or sanitized Markdown, never raw HTML, and is
+      never run as code or SQL
+- [ ] Every user has an AI quota, and every call sets `max_tokens`
+- [ ] The model version is pinned in a config setting
+
 **Money**
 
 - [ ] Billing alerts and spending caps on every provider (hosting, database, AI
@@ -45,6 +56,9 @@ whether an item is done, use the matching prompt further down.
       calls a paid API
 - [ ] Payment status comes from verified webhooks, not from the browser
 - [ ] Webhook handlers check the signature and ignore duplicates
+- [ ] The full payment flow was tested in test mode (success, declined card,
+      cancel, refund, renewal), and production uses live keys
+- [ ] You know how sales tax / VAT applies to what you sell
 
 **Data**
 
@@ -55,15 +69,36 @@ whether an item is done, use the matching prompt further down.
 - [ ] Every migration is read for `DROP`, `DELETE` and `TRUNCATE` before it
       runs on production
 
+**Quality**
+
+- [ ] Sign-up, email verification, login and password reset tested end to end
+      with a real email address
+- [ ] Automated end-to-end tests cover the money paths (sign-up, login, core
+      feature, payment)
+- [ ] Every screen has error, empty and loading states; no raw error messages
+      shown to users
+- [ ] Lists are paginated; no query loads every row
+- [ ] Tested on a real phone, including Safari on iPhone
+- [ ] Lighthouse run for accessibility and speed
+
 **Running it**
 
 - [ ] HTTPS everywhere
+- [ ] Security headers checked with a free scanner (for example Mozilla's HTTP
+      Observatory)
 - [ ] Error tracking installed (for example Sentry)
 - [ ] An uptime monitor watches the site
 - [ ] You know where the rollback button is for a bad deploy
+- [ ] Logged-in pages are not cached by a CDN (`Cache-Control: private` or
+      `no-store`)
+- [ ] Scheduled (cron) jobs can't be triggered by strangers, and you'd notice
+      if one stopped running
 - [ ] Logs never contain passwords, tokens or card numbers
 - [ ] 2FA on GitHub, hosting, the domain registrar, the cloud account and AI
-      providers
+      providers, with recovery codes saved
+- [ ] Every account is in your name, and the domain is set to auto-renew
+- [ ] You know the free-tier limits of every service, and what happens when
+      you hit them
 - [ ] The lockfile is committed, and every dependency is a real, widely used
       package
 
@@ -72,6 +107,12 @@ whether an item is done, use the matching prompt further down.
 - [ ] If you collect personal data, you've looked up the privacy rules where
       your users live (for example GDPR in the EU), and users can delete their
       account
+- [ ] A privacy policy that lists every service receiving user data (including
+      AI providers and analytics), plus terms of service
+- [ ] Cookie consent, if you use non-essential cookies for EU or UK users
+- [ ] A way for users to reach you (support email or feedback button)
+- [ ] A README that says how to run, deploy and find every account the app
+      uses
 
 ---
 
@@ -178,17 +219,63 @@ need it right now, and what is the smallest change that would handle it?
 Then quiz me with 3 questions.
 ```
 
+### 11. AI feature security (if your app calls an AI model)
+
+```
+Review every place this app sends text to an AI model. For each one: could a
+user, or a web page, email or document the AI reads, contain instructions
+that change what the AI does (prompt injection)? What tools, data or actions
+can the AI reach, and are permissions checked in code rather than in the
+prompt? Is AI output ever shown as raw HTML, or run as code or SQL? Are there
+secrets in the system prompt? Is there a per-user quota and max_tokens on
+every call? Show the worst realistic attack and the smallest fixes.
+```
+
+### 12. Tests for the money paths
+
+```
+Write end-to-end tests (Playwright) for the paths this app can't afford to
+break: sign up, log in, password reset, the core feature, and payment in test
+mode. Then show me each test failing when I break the feature on purpose, so I
+know the tests actually check something. Don't change app code to make tests
+pass without telling me.
+```
+
+### 13. Launch day readiness
+
+```
+List every outside service this app uses (hosting, database, auth, storage,
+email, AI, payments, analytics). For each: which plan am I on, what are its
+limits (requests, storage, emails, bandwidth, rate limits), what happens when
+I hit one, and does a free project pause when inactive? If 1,000 people
+signed up in one hour, what would break first?
+```
+
+### 14. Privacy data map
+
+```
+Make a table of every piece of personal data this app collects (emails, names,
+IPs, uploads, chat messages, payment info): where it's stored, which outside
+services receive it (including AI providers, analytics and logs), how long we
+keep it, and how a user can export or delete it. I'll use this to write my
+privacy policy.
+```
+
 ---
 
 ## Red flags: stop and ask why
 
-If you see your AI do any of these, pause and use prompt 9 above.
+If you see your AI do any of these, pause and use prompt 9 above. If it's
+doing them while stuck on a bug, see [Debugging with AI](04-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it).
 
 - Turns off Row Level Security, or sets Firebase rules to
   `allow read, write: if true`
 - Changes CORS to allow every website just to make an error go away (fine for a
   truly public API, risky for anything with logins)
 - Comments out a login or permission check "for testing"
+- Relies on the AI prompt to protect data ("only show the user their own
+  records") instead of checking in code
+- Changes a test so it passes, instead of fixing the bug it caught
 - Puts a secret key in a frontend file or in a `NEXT_PUBLIC_` / `VITE_` /
   `REACT_APP_` / `EXPO_PUBLIC_` variable
 - Builds SQL by gluing strings: `"... WHERE id = " + id`, or `${id}` inside a
