@@ -110,4 +110,4 @@ you know exist. That gap is what this repo is for.
 
 ---
 
-Next: [The reel, explained, term by term](01-the-reel-explained.md)
+Next: [Reading your project: the files, commands and words you'll see](01-reading-your-project.md)

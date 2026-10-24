@@ -15,19 +15,30 @@ for a long time.
 1. **[Start here](guide/00-start-here.md)**: how an app actually works, using a
    restaurant as the picture. Five minutes, and it makes everything else make
    sense.
-2. **[The reel, explained](guide/01-the-reel-explained.md)**: every term from
+2. **[Reading your project](guide/01-reading-your-project.md)**: the files,
+   terminal commands, Git words and code words you see every day, explained.
+3. **[Vibe coding well](guide/02-vibe-coding-well.md)**: how to work with AI
+   tools: specs, plans, small steps, checkpoints, what the AI can and can't
+   see, rules files, and checking its work without reading every line.
+4. **[The reel, explained](guide/03-the-reel-explained.md)**: every term from
    the reel, each with a plain explanation, an everyday picture, and what it
    means for you.
-3. **[What you actually need](guide/02-what-you-actually-need.md)**: the honest
+5. **[What you actually need](guide/04-what-you-actually-need.md)**: the honest
    triage, what your AI tends to miss, and a learning path.
-4. **[Beyond the reel](guide/03-beyond-the-reel.md)**: what the reel left out
+6. **[Beyond the reel](guide/05-beyond-the-reel.md)**: what the reel left out
    about launching and running an app: securing AI features, taking payments,
    legal basics, testing, launch day, maintenance after launch, and what
    changes if you sell to teams or ship a mobile app.
-5. **[Debugging with AI](guide/04-debugging-with-ai.md)**: how to read an error,
+7. **[Your database, explained](guide/06-your-database.md)**: tables and how
+   they connect, storing money and time correctly, constraints, deleting, and
+   changing live data safely.
+8. **[Debugging with AI](guide/07-debugging-with-ai.md)**: how to read an error,
    find where it really happened, give your AI the right clues, and escape the
    loop where every "fix" brings a new error.
-6. **[Checklist and AI prompts](guide/05-checklist-and-ai-prompts.md)**: a
+9. **[How vibe-coded apps break](guide/08-how-vibe-coded-apps-break.md)**: 19
+   common disaster stories, why the AI wrote the code that caused each one, and
+   how to prevent it.
+10. **[Checklist and AI prompts](guide/09-checklist-and-ai-prompts.md)**: a
    pre-launch checklist and copy-paste prompts that make your AI check these
    things for you.
 

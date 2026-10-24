@@ -51,7 +51,7 @@ matter more than most of what's on it.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](05-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](09-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -72,7 +72,7 @@ matter more than most of what's on it.
 The reel also leaves out whole areas a launch depends on: securing your AI
 features (prompt injection), testing, payments, privacy law, free-tier limits
 on launch day, and maintenance afterwards. Those are in
-[Beyond the reel](03-beyond-the-reel.md).
+[Beyond the reel](05-beyond-the-reel.md).
 
 Do these 12 and you've covered the disasters that most often hit vibe-coded
 apps: leaked keys, open databases, surprise bills and lost data.
@@ -82,7 +82,7 @@ apps: leaked keys, open databases, surprise bills and lost data.
 ## Tier 2: once real people are using it
 
 Learn these as you go. Each one is explained in
-[the reel, explained](01-the-reel-explained.md).
+[the reel, explained](03-the-reel-explained.md).
 
 - **Seeing what's happening:** logging, metrics, error tracking (Sentry),
   monitoring, an uptime monitor with a health check, alerts, observability.
@@ -149,9 +149,11 @@ volunteers the rest.
 - **It rarely adds what you didn't ask for:** rate limits, indexes, backups,
   alerts, tests.
 
-The fix is cheap: know the words, then ask. The
-[checklist and copy-paste prompts](05-checklist-and-ai-prompts.md) do exactly
-that.
+The fix is cheap: know the words, then ask. [Vibe coding well](02-vibe-coding-well.md)
+covers the working habits that stop most of these problems before they start,
+[How vibe-coded apps break](08-how-vibe-coded-apps-break.md) shows what happens
+when they're missing, and the [checklist and copy-paste prompts](09-checklist-and-ai-prompts.md)
+check for them.
 
 ---
 
@@ -161,20 +163,24 @@ Go one step at a time, and practice each step on a tiny app of your own.
 
 1. **How the web works:** [Start here](00-start-here.md), then the "Learn web
    development" section of [MDN Web Docs](https://developer.mozilla.org/).
-2. **Git basics:** commit, push, branch, and going back to an old version.
-   MIT's free [Missing Semester](https://missing.csail.mit.edu/) course covers
-   Git and the terminal.
-3. **Logins and permissions:** build a tiny app with login, then prove that
+2. **Your project and Git:** [Reading your project](01-reading-your-project.md)
+   for the files, terminal and Git words; then commit, push, branch, and go
+   back to an old version on purpose. MIT's free
+   [Missing Semester](https://missing.csail.mit.edu/) course goes deeper on Git
+   and the terminal.
+3. **Working with AI:** [Vibe coding well](02-vibe-coding-well.md). Write a
+   spec and a rules file for your next project before any code.
+4. **Logins and permissions:** build a tiny app with login, then prove that
    user A can't see user B's data.
-4. **Databases:** tables, basic SQL, indexes, migrations, and doing one real
-   backup *and restore*.
-5. **Security basics:** read the [OWASP Top 10](https://top10.owasp.org/2025/en/),
+5. **Databases:** [Your database, explained](06-your-database.md), then basic
+   SQL, and doing one real backup *and restore*.
+6. **Security basics:** read the [OWASP Top 10](https://top10.owasp.org/2025/en/),
    then try the free hands-on labs at
    [PortSwigger Web Security Academy](https://portswigger.net/web-security)
    (start with SQL injection and XSS).
-6. **Running it for real:** error tracking, an uptime monitor, a billing
+7. **Running it for real:** error tracking, an uptime monitor, a billing
    alert, and rolling back a deploy on purpose so you know how.
-7. **After that:** pick Tier 2 items as you run into them.
+8. **After that:** pick Tier 2 items as you run into them.
 
 A good way to learn any single term is to ask your AI:
 
@@ -186,4 +192,4 @@ Then quiz me with 3 questions.
 
 ---
 
-Next: [Beyond the reel: launching and running your app](03-beyond-the-reel.md)
+Next: [Beyond the reel: launching and running your app](05-beyond-the-reel.md)

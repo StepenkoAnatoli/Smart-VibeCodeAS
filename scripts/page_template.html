@@ -161,7 +161,7 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
     <div class="eyebrow">Missing Knowledge for Vibe Coders</div>
     <h1>Who's gonna tell vibe coders about…</h1>
     <p>Every term from the viral list, explained for people who build with AI and don't read code. Plus what the list left out about launching, running and debugging an app.</p>
-    <div class="facts"><span>111 terms from the list</span><span>6 chapters</span><span>Now · Soon · Later</span></div>
+    <div class="facts"><span>111 terms from the list</span><span>__CHAPTER_COUNT__ chapters</span><span>Now · Soon · Later</span></div>
   </header>
 </div>
 
@@ -251,7 +251,7 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
     for (const b of blocks) {
       b.el.className = "block-" + b.kind;
       const h = b.el.firstElementChild;
-      if (b.kind === "h3" && h) decorateEntry(b, h, ch.id === "ch1");
+      if (b.kind === "h3" && h) decorateEntry(b, h, ch.id === DATA.glossary);
       b.text = norm(b.el.textContent);
       blockCount++;
     }
@@ -339,7 +339,7 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
   });
 
   // Checklist ticks are remembered in this browser only.
-  const ticks = document.querySelectorAll('#ch5 input[type="checkbox"]');
+  const ticks = document.querySelectorAll('#' + DATA.checklist + ' input[type="checkbox"]');
   ticks.forEach((box, i) => {
     box.disabled = false;
     box.id = "tick-" + i;
