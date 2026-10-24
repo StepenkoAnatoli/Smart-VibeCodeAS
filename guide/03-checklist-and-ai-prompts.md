@@ -61,6 +61,10 @@ whether an item is done, use the matching prompt further down.
 - [ ] Error tracking installed (for example Sentry)
 - [ ] An uptime monitor watches the site
 - [ ] You know where the rollback button is for a bad deploy
+- [ ] Logged-in pages are not cached by a CDN (`Cache-Control: private` or
+      `no-store`)
+- [ ] Scheduled (cron) jobs can't be triggered by strangers, and you'd notice
+      if one stopped running
 - [ ] Logs never contain passwords, tokens or card numbers
 - [ ] 2FA on GitHub, hosting, the domain registrar, the cloud account and AI
       providers

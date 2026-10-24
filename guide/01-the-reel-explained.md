@@ -1,9 +1,12 @@
 # The reel, explained: every term in plain English
 
-The reel: *"Who's gonna tell vibe coders about..."* followed by about 100
-engineering terms. Here is every one of them, in the same groups the reel used,
-plus the few that only appeared in the video overlay (SSRF, Database
-Migrations, Schema Versioning).
+The original post is a handwritten list by @nataindata: *"Who's gonna tell
+vibe coders about..."* followed by 111 numbered engineering terms. Reposts and
+the video's caption showed parts of it, sorted into groups.
+
+This guide explains all 111 terms. It uses the caption's groups and adds a
+ninth group for the terms the caption left out. It also covers Data
+Validation, which appears only in the caption, plus one bonus entry.
 
 I put **Security** first, because that's where beginners get hurt most.
 
@@ -33,6 +36,7 @@ purpose.
 6. [Performance metrics & networking](#6-performance-metrics--networking)
 7. [Infrastructure & build tools](#7-infrastructure--build-tools)
 8. [Production reality](#8-production-reality)
+9. [Inside your running code](#9-inside-your-running-code)
 
 ---
 
@@ -117,6 +121,23 @@ it, because it's on your letterhead.
 logins with hand-built forms or APIs. Never let a plain link (a GET request)
 change data.
 
+### CORS (Cross-Origin Resource Sharing) — 🟡 Soon
+
+**What it is:** A browser safety rule. By default, JavaScript on one website
+can't read the answers from a *different* website's API. CORS is how your API
+tells browsers which other websites are allowed to call it.
+
+**Picture it:** A guest list at your API's door. The browser checks the list
+before letting another website's code read the answer.
+
+**What it means for you:** You'll meet it as a red error in the browser
+console, "blocked by CORS policy", usually when your frontend and backend live
+at different addresses. The right fix is adding *your own* frontend's address
+to the allowed list. The tempting fix, which AI often suggests, is allowing
+every website: fine for a truly public API, risky for anything with logins.
+And CORS is only enforced by browsers. Tools like `curl` ignore it, so it's not
+a lock on your API; your server must still check who's asking.
+
 ### JWT / OAuth — 🔴 Now (as "don't build login yourself")
 
 **What it is:** **OAuth** is the standard behind "Log in with Google/GitHub":
@@ -134,6 +155,23 @@ Firebase Auth, Auth.js) instead of building login and password storage
 yourself. Common AI mistakes: reading a JWT without *verifying its signature*,
 tokens that never expire, and putting private information inside a JWT. Anyone
 can read what's inside one; it's encoded, not encrypted.
+
+### JWT Rotation — 🟡 Soon
+
+**What it is:** Keeping login tokens short-lived and replacing them regularly.
+The usual setup is a short-lived *access token* (minutes) plus a longer-lived
+*refresh token* that gets you a new one. Each time the refresh token is used,
+it's swapped for a fresh one too. The term also covers changing the secret key
+that signs the tokens.
+
+**Picture it:** A hotel key card that stops working every day, so the front
+desk issues a new one. A lost card is only useful to a thief for a short time.
+
+**What it means for you:** A stolen token that never expires is a permanent
+key to someone's account. Good auth providers (Supabase Auth, Clerk, Auth0,
+Firebase Auth) handle rotation for you, which is one more reason not to build
+login yourself. If your JWT signing secret ever leaks, replace it: every token
+signed with it can be forged. Expect that to log everyone out.
 
 ### Secrets Management — 🔴 Now
 
@@ -353,11 +391,19 @@ A lock that works across many servers (often using Redis or the database), so
 only one server does a job at a time, such as sending the daily email once
 instead of five times.
 
-### Partitioning (Sharding) — ⚪ Later
+### Sharding — ⚪ Later
 
-Splitting one huge table or database into pieces, such as users A–M on one
-machine and N–Z on another. **For you:** Only at very large scale. A single
-Postgres database with good indexes handles millions of rows.
+Splitting your data across several separate database servers, each holding a
+slice, such as users A–M on one machine and N–Z on another, so no single
+machine has to store or serve everything. **For you:** Only at very large
+scale. A single Postgres database with good indexes handles millions of rows.
+
+### Partitioning — ⚪ Later
+
+Splitting one big table into smaller pieces, often inside the same database,
+for example one piece per month of orders, so a query about this month can skip
+the rest. Sharding is partitioning spread across several machines. **For
+you:** Later.
 
 ### Replication — ⚪ Later
 
@@ -425,12 +471,61 @@ to identical questions, or a homepage that changes once a day. The dangers are
 showing stale data and, much worse, caching one user's private page and serving
 it to someone else. See *Cache Invalidation*.
 
+### CDN (Content Delivery Network) — 🟡 Soon
+
+**What it is:** A network of servers around the world that keep copies of your
+files (images, JavaScript, CSS, videos) close to your users.
+
+**Picture it:** Instead of shipping every order from one central warehouse,
+you keep stock in a local shop in every city.
+
+**What it means for you:** Vercel, Netlify and Cloudflare Pages already put
+your site on a CDN. Where it matters is user uploads and big images: keep them
+in storage that serves through a CDN (Supabase Storage, Cloudflare R2, Amazon
+S3 with CloudFront) rather than from your own server or database, and resize
+images before serving them. Serving large files yourself is slow, and the
+bandwidth can become your biggest bill.
+
+### Edge Caching — ⚪ Later
+
+Caching responses on those CDN servers ("the edge" means the servers nearest
+your users), so many requests never reach your server at all. **For you:**
+Great for public pages. Dangerous for private ones: if a logged-in page gets
+cached at the edge, the next visitor can be shown someone else's account. Make
+sure personal pages are marked as not cacheable (`Cache-Control: private` or
+`no-store`).
+
 ### Load Balancing — ⚪ Later
 
 Spreading incoming traffic across several copies of your server so none is
 overwhelmed, and skipping copies that are down. Like a host at the door seating
 guests across several waiters. **For you:** Hosting platforms do this
 automatically.
+
+### Vertical Scaling — ⚪ Later
+
+Handling more traffic by making your one server bigger, with more CPU and more
+memory ("scaling up"). Like buying a bigger oven. It's simple, but there's a
+ceiling and the price climbs fast. **For you:** Often the easiest first fix:
+upgrade your plan.
+
+### Horizontal Scaling — ⚪ Later
+
+Handling more traffic by adding more servers and splitting the work between
+them with a load balancer ("scaling out"). Like hiring more cooks with more
+ovens. There's no real ceiling, but your app must not keep important things in
+one server's memory (logins, uploads, counters), because the next request may
+land on a different server. **For you:** Serverless platforms do this
+automatically, which is exactly why you can't rely on in-memory variables
+between requests.
+
+### Autoscaling — ⚪ Later
+
+Adding and removing servers automatically as traffic rises and falls: more on a
+busy Friday night, fewer at 4am so you pay less. **For you:** Serverless and
+most hosting platforms do it for you. The catch is that autoscaling also scales
+your bill, so a traffic spike or a bot can scale you into a big invoice. Set a
+maximum.
 
 ### Reverse Proxies — ⚪ Later
 
@@ -538,6 +633,36 @@ the ticket rail in a kitchen: waiters pin orders, cooks take them in turn.
 generating a long AI report. Hosted options include Inngest, Trigger.dev and
 Upstash QStash.
 
+### Cron Jobs — 🟡 Soon
+
+**What it is:** Tasks that run automatically on a schedule: every night at
+2am, every hour, every Monday. The name comes from `cron`, the old Unix
+scheduler. Schedules are written like `0 2 * * *`, which means 2am every day.
+
+**Picture it:** An alarm clock for your code.
+
+**What it means for you:** Used for daily emails, cleaning up old data,
+renewing subscriptions and syncing data. Your host usually has a version
+(Vercel Cron Jobs, Supabase's `pg_cron`, scheduled GitHub Actions). Watch out
+for four things:
+
+- **Time zones:** schedules usually run in UTC, not your local time.
+- **Silent stops:** a job that quietly stops running goes unnoticed for weeks,
+  so add an alert.
+- **Double runs:** a job that runs twice or overlaps with itself should be
+  idempotent.
+- **Open doors:** a job triggered by a public URL that anyone can call. Protect
+  that URL with a secret.
+
+### Backpressure — ⚪ Later
+
+When work arrives faster than you can handle it, backpressure is the system
+pushing back: slowing senders down, making them wait, or turning extra work
+away, instead of piling up an endless backlog until something runs out of
+memory. Like a restaurant that stops seating people when the kitchen is full,
+instead of taking orders it can't cook. **For you:** Your small version is rate
+limits and limits on queue size.
+
 ### Pub/Sub — ⚪ Later
 
 Short for publish/subscribe. A publisher announces "an order was placed" on a
@@ -604,6 +729,21 @@ dangerous gas.
 Update servers a few at a time instead of all at once, so the app stays up
 during the update. Your host handles it.
 
+### Rollbacks — 🟡 Soon (find the button before you launch)
+
+**What it is:** Going back to the previous working version after a bad
+deploy.
+
+**Picture it:** Undo, for your live website.
+
+**What it means for you:** When you've just deployed and everything broke, the
+fastest fix is usually to roll back first and look for the bug calmly
+afterwards. Vercel and Netlify keep your earlier deploys and let you switch
+back in a click, and with Git you can revert the bad commit. The catch: rolling
+back code does **not** roll back your database. If that deploy ran a migration
+that deleted a column, the data is gone. That's another reason to back up
+before migrations.
+
 ### Health Checks — 🟡 Soon
 
 A simple URL (like `/health`) that answers "I'm OK", so a monitor or load
@@ -623,6 +763,15 @@ Watching numbers about your app over time: is it up, how fast is it, how many
 errors, how much memory, how much money. Like the dashboard in a car. **For
 you:** Start with your host's built-in analytics, an uptime monitor, and error
 tracking.
+
+### Metrics — 🟡 Soon
+
+Numbers measured over time: requests per minute, error rate, response time,
+signups per day, money spent on AI per day. Logs record single events; metrics
+show trends. A car's speedometer and fuel gauge, versus a logbook of the trip.
+**For you:** Your host's dashboard already shows the technical basics. Add the
+business numbers you care about, like signups, active users and AI cost per
+user.
 
 ### Logging — 🟡 Soon
 
@@ -664,6 +813,13 @@ A Service Level Objective is a reliability target, such as "99.9% of requests
 succeed each month" or "95% of pages load in under a second". Related words:
 **SLA**, a promise to customers with penalties, and **SLI**, the actual
 measurement.
+
+### SLIs — ⚪ Later
+
+A Service Level Indicator is the real measured number behind an SLO, such as
+"the share of requests that succeeded this month" or "how long 95% of page
+loads took". The SLI is what you measure, the SLO is your target for it, and
+the SLA is the promise you make to customers.
 
 ### Error Budgets — ⚪ Later
 
@@ -961,6 +1117,62 @@ and what changes so it doesn't happen again. Good postmortems are *blameless*:
 they fix the system, not blame the person. **For you:** Keep an `INCIDENTS.md`
 file with five lines per incident. It's how you actually learn everything in
 this list.
+
+---
+
+## 9. Inside your running code
+
+These four were on the original list but missing from the caption's groups.
+They're about what happens inside your program while it runs.
+
+### Race Conditions — 🟡 Soon
+
+**What it is:** A bug where the result depends on which of two things happens
+first. Two requests read the same value at the same moment, both act on it, and
+one quietly overwrites the other.
+
+**Picture it:** Two people check a shared calendar, both see 3pm is free, and
+both book it.
+
+**What it means for you:** Classic examples are two buyers getting the last
+ticket, a double-clicked "Redeem coupon" applying twice, and two likes at the
+same instant counting as one. These bugs never show up when you test alone. The
+usual fixes:
+
+- Let the database do the math in one step (`UPDATE ... SET likes = likes + 1`)
+  instead of read, add 1, save.
+- Add unique constraints so a duplicate simply can't be saved.
+- Use transactions and locking (see *Optimistic Locking* and *Pessimistic
+  Locking*).
+
+### Thread Safety — ⚪ Later
+
+Some programs do several things at the same time inside one process, using
+*threads*. Code is thread-safe if it still works when two threads touch the
+same data at once; when it isn't, you get a race condition inside your program.
+**For you:** Node.js runs your JavaScript on a single thread, so you'll mostly
+meet thread safety in Python, Java, Go or Rust. The vibe-coder version is shared
+global variables on the server: data stored in a global variable can leak from
+one user's request into another's.
+
+### Memory Leaks — ⚪ Later
+
+Your program keeps taking memory and never gives it back, usually by adding
+things to a list or cache that never gets emptied, or by adding event listeners
+and timers that are never removed. Memory use creeps up until the app slows
+down or crashes, restarts, and the cycle repeats. Like a desk where papers pile
+up and never get filed. **For you:** If your server's memory graph climbs
+steadily and it crashes every few days, suspect a leak. In frontends, timers
+and listeners that a React `useEffect` never cleans up are a common cause.
+
+### Garbage Collection — ⚪ Later
+
+The automatic cleanup in languages like JavaScript, Python, Java and Go: the
+language finds memory that nothing uses anymore and frees it, like a cleaner who
+throws away papers nobody will ever read again. A memory leak is when your code
+still (accidentally) holds on to something, so the cleaner isn't allowed to
+throw it away. Garbage collection can also cause tiny pauses. **For you:** Just
+know the word.
 
 ---
 

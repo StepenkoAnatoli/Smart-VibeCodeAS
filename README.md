@@ -4,10 +4,11 @@ Basically: teaching vibe coders who build with ChatGPT, Claude, Cursor, Lovable
 and so on what they might be missing, and what their AI might be missing for
 them.
 
-It started with a viral reel: *"Who's gonna tell vibe coders about..."*,
-followed by about 100 engineering terms. This repo explains every one of them
-in plain English, assuming zero coding knowledge, then sorts them into what you
-need now, what you need soon, and what you can safely ignore for a long time.
+It started with a viral post by @nataindata: *"Who's gonna tell vibe coders
+about..."*, followed by a list of 111 engineering terms. This repo explains
+every one of them in plain English, assuming zero coding knowledge, then sorts
+them into what you need now, what you need soon, and what you can safely ignore
+for a long time.
 
 ## Read in this order
 
@@ -28,7 +29,7 @@ need now, what you need soon, and what you can safely ignore for a long time.
 - **About 12 of the terms matter before you launch.** Nearly all of them come
   down to four things: don't leak your keys, don't let users see each other's
   data, don't get a surprise bill, and don't lose your data.
-- **About 20 more matter once real people use your app.**
+- **About 25 more matter once real people use your app.**
 - **The rest are big-company problems.** Know what the word means, and learn it
   properly when it becomes your problem.
 
