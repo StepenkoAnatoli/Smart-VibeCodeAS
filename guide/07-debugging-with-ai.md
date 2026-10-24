@@ -367,4 +367,4 @@ symptom or fixing the cause?
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](05-checklist-and-ai-prompts.md)
+Next: [How vibe-coded apps break: the common stories](08-how-vibe-coded-apps-break.md)

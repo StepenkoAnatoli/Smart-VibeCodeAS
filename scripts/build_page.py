@@ -15,21 +15,26 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from check_guide import HEADING_FOR, REEL_TERMS  # noqa: E402
+from check_guide import GLOSSARY, HEADING_FOR, REEL_TERMS  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 GUIDE = ROOT / "guide"
 TEMPLATE = ROOT / "scripts" / "page_template.html"
 OUTPUT = ROOT / "site" / "index.html"
+CHECKLIST = GUIDE / "09-checklist-and-ai-prompts.md"
 
 # Short names for the chapter menu, by file-name prefix.
 NAV_LABELS = {
     "00": "Start here",
-    "01": "The reel, explained",
-    "02": "What you need",
-    "03": "Beyond the reel",
-    "04": "Debugging",
-    "05": "Checklist",
+    "01": "Your project",
+    "02": "Vibe coding well",
+    "03": "The reel, explained",
+    "04": "What you need",
+    "05": "Beyond the reel",
+    "06": "Your database",
+    "07": "Debugging",
+    "08": "How apps break",
+    "09": "Checklist",
 }
 
 LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
@@ -75,10 +80,17 @@ def build():
             "md": rewrite_links(f.read_text(), ids_by_file[f.name], ids_by_file),
         })
     numbers = {HEADING_FOR.get(term, term): i + 1 for i, term in enumerate(REEL_TERMS)}
-    data = json.dumps({"chapters": chapters, "numbers": numbers}, ensure_ascii=False)
+    data = json.dumps({
+        "chapters": chapters,
+        "numbers": numbers,
+        "glossary": ids_by_file[GLOSSARY.name],
+        "checklist": ids_by_file[CHECKLIST.name],
+    }, ensure_ascii=False)
     # Keep the embedded JSON from closing its <script> tag early.
     data = data.replace("</", "<\\/").replace("<!--", "<\\u0021--")
-    return TEMPLATE.read_text().replace("__GUIDE_DATA__", data)
+    return (TEMPLATE.read_text()
+            .replace("__CHAPTER_COUNT__", str(len(chapters)))
+            .replace("__GUIDE_DATA__", data))
 
 
 def main():

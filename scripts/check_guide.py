@@ -17,7 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = [ROOT / "README.md", *sorted((ROOT / "guide").glob("*.md"))]
-GLOSSARY = ROOT / "guide" / "01-the-reel-explained.md"
+GLOSSARY = ROOT / "guide" / "03-the-reel-explained.md"
 
 # The 111 terms from the original @nataindata list, in order.
 REEL_TERMS = [

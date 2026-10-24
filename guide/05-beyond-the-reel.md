@@ -599,4 +599,4 @@ Crashlytics), because users rarely report crashes; they just delete the app.
 
 ---
 
-Next: [Debugging with AI: how to get unstuck](04-debugging-with-ai.md)
+Next: [Your database, explained](06-your-database.md)
