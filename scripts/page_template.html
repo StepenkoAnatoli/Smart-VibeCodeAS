@@ -18,6 +18,7 @@
   --later: #5a677b;
   --code-bg: #e2e9f2;
   --focus: #1f5fbf;
+  --good: #1d7448;
   --font-hand: "Kalam", "Comic Neue", "Segoe Print", cursive;
   --font-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -26,13 +27,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --paper: #0e131b; --surface: #151c27; --ink: #e2e8f1; --muted: #9ba7b8; --rule: #2a3446;
-    --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff;
+    --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff; --good: #5ccb8d;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --paper: #0e131b; --surface: #151c27; --ink: #e2e8f1; --muted: #9ba7b8; --rule: #2a3446;
-  --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff;
+  --marker: #f06b70; --now: #f06b70; --soon: #e3a54a; --later: #9ba7b8; --code-bg: #1a2332; --focus: #7fb0ff; --good: #5ccb8d;
   color-scheme: dark;
 }
 
@@ -151,6 +152,40 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
 .block-h2 h2 { margin-top: 2rem; }
 
 .empty { padding-block: 3rem; text-align: center; color: var(--muted); }
+
+/* Quiz */
+.quiz-toggle { margin-left: auto; border-color: var(--marker); color: var(--marker); }
+.quiz-toggle[aria-pressed="true"] { background: var(--marker); color: var(--paper); border-color: var(--marker); }
+body.quiz-on .search, body.quiz-on .chips, body.quiz-on .chapters, body.quiz-on .status { display: none; }
+body.quiz-on #guide, body.quiz-on #empty { display: none; }
+.quiz { padding-block: 1.5rem 1rem; }
+.quiz h2 { font: 700 clamp(1.6rem, 5vw, 2rem)/1.15 var(--font-hand); color: var(--marker); margin: 0 0 0.25rem; }
+.quiz-stats { margin: 0 0 1rem; font: 400 0.875rem/1.4 var(--font-mono); color: var(--muted); }
+.quiz-modes { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem; }
+.quiz-card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 1.25rem; display: grid; gap: 1rem; }
+.quiz-progress { font: 600 0.75rem/1.2 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.quiz-q { font-size: 1.15rem; font-weight: 700; line-height: 1.4; margin: 0; }
+.quiz-options { display: grid; gap: 0.5rem; }
+.quiz-option {
+  text-align: left; font: inherit; color: var(--ink); background: var(--paper); cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 8px; padding: 0.75rem 0.9rem; line-height: 1.45;
+}
+.quiz-option:hover:not(:disabled) { border-color: var(--ink); }
+.quiz-option:disabled { cursor: default; }
+.quiz-option.right { border-color: var(--good); box-shadow: inset 0 0 0 1px var(--good); }
+.quiz-option.wrong { border-color: var(--now); box-shadow: inset 0 0 0 1px var(--now); }
+.quiz-option .mark { font: 600 0.75rem/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; margin-left: 0.5rem; }
+.quiz-option.right .mark { color: var(--good); }
+.quiz-option.wrong .mark { color: var(--now); }
+.quiz-why { margin: 0; padding: 0.75rem 0.9rem; border-radius: 8px; background: var(--code-bg); }
+.quiz-why strong.right { color: var(--good); }
+.quiz-why strong.wrong { color: var(--now); }
+.quiz-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; }
+.quiz-next {
+  font: 700 0.95rem/1 var(--font-body); color: var(--paper); background: var(--ink); border: 0;
+  border-radius: 999px; padding: 0.7rem 1.1rem; cursor: pointer;
+}
+.quiz-end { font-size: 1.05rem; margin: 0; }
 .foot { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--muted); }
 
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
@@ -178,6 +213,7 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
         <button class="chip" type="button" data-filter="soon" aria-pressed="false"><span class="dot soon"></span>Soon</button>
         <button class="chip" type="button" data-filter="later" aria-pressed="false"><span class="dot later"></span>Later</button>
       </div>
+      <button class="chip quiz-toggle" id="quiz-toggle" type="button" aria-pressed="false">Quiz me</button>
     </div>
     <nav class="chapters" id="chapters" aria-label="Chapters"></nav>
     <div class="status" id="status" aria-live="polite"></div>
@@ -185,6 +221,16 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
 </div>
 
 <main class="wrap" id="guide"></main>
+<section class="wrap quiz" id="quiz" hidden aria-labelledby="quiz-title">
+  <h2 id="quiz-title">Quiz: the essentials</h2>
+  <p class="quiz-stats" id="quiz-stats"></p>
+  <div class="quiz-modes" role="group" aria-label="Which questions">
+    <button class="chip" type="button" data-mode="all" aria-pressed="true">All questions</button>
+    <button class="chip" type="button" data-mode="new" aria-pressed="false">Not tried yet</button>
+    <button class="chip" type="button" data-mode="missed" aria-pressed="false">Ones I missed</button>
+  </div>
+  <div class="quiz-card" id="quiz-card" aria-live="polite"></div>
+</section>
 <div class="wrap">
   <p class="empty" id="empty" hidden>Nothing matches that. Try a shorter word, or switch the filter back to All.</p>
   <p class="foot">Based on the list by @nataindata. The guide's source lives in the Missing-Knowedge-vibecoders repository on GitHub; this page is built from it.</p>
@@ -200,7 +246,7 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
   const input = document.getElementById("q");
   const statusEl = document.getElementById("status");
   const emptyEl = document.getElementById("empty");
-  const chips = [...document.querySelectorAll(".chip")];
+  const chips = [...document.querySelectorAll(".chip[data-filter]")];
   const LABELS = { "🔴": "now", "🟡": "soon", "⚪": "later" };
   const WORDS = { "🔴": "Now", "🟡": "Soon", "⚪": "Later" };
 
@@ -399,9 +445,119 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
     const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
     if (!target) return;
     e.preventDefault();
+    if (document.body.classList.contains("quiz-on") && !quizEl.contains(target)) { setQuiz(false); setHdr(); }
     if (document.body.classList.contains("filtering")) reset();
     target.scrollIntoView({ block: "start" });
   });
+
+  // Quiz: questions from the guide; results are remembered in this browser only.
+  const QUIZ = DATA.quiz || [];
+  const quizEl = document.getElementById("quiz");
+  const quizCard = document.getElementById("quiz-card");
+  const quizStats = document.getElementById("quiz-stats");
+  const quizToggle = document.getElementById("quiz-toggle");
+  const modeChips = [...quizEl.querySelectorAll("[data-mode]")];
+  let results = {};
+  try { results = JSON.parse(store.get("mkvc-quiz") || "{}") || {}; } catch (e) { results = {}; }
+  let queue = [], qi = 0, score = 0, mode = "all";
+
+  const shuffle = (list) => {
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  };
+  function showStats() {
+    const tried = QUIZ.filter((q) => results[q.id]).length;
+    const right = QUIZ.filter((q) => results[q.id] === "right").length;
+    quizStats.textContent = QUIZ.length + " questions. You've tried " + tried + ": " + right + " right, " + (tried - right) + " to review.";
+  }
+  function startQuiz(m) {
+    mode = m;
+    modeChips.forEach((c) => c.setAttribute("aria-pressed", String(c.dataset.mode === m)));
+    const pool = QUIZ.filter((q) => m === "all" || (m === "new" && !results[q.id]) || (m === "missed" && results[q.id] === "wrong"));
+    queue = shuffle(pool.slice());
+    qi = 0;
+    score = 0;
+    showStats();
+    renderQuestion();
+  }
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  function renderQuestion() {
+    quizCard.textContent = "";
+    if (!queue.length) {
+      const msg = mode === "missed" ? "Nothing to review: you haven't missed any questions." : "You've tried every question. Pick All questions to go again.";
+      quizCard.append(el("p", "quiz-end", msg));
+      return;
+    }
+    if (qi >= queue.length) {
+      quizCard.append(el("p", "quiz-end", "Done: " + score + " out of " + queue.length + " right."));
+      const again = el("button", "quiz-next", score < queue.length ? "Review the ones I missed" : "Start again");
+      again.type = "button";
+      again.addEventListener("click", () => startQuiz(score < queue.length ? "missed" : "all"));
+      quizCard.append(again);
+      return;
+    }
+    const q = queue[qi];
+    quizCard.append(el("div", "quiz-progress", "Question " + (qi + 1) + " of " + queue.length + " · " + score + " right so far"));
+    quizCard.append(el("p", "quiz-q", q.q));
+    const options = el("div", "quiz-options");
+    const order = shuffle(q.options.map((text, i) => ({ text, i })));
+    const buttons = order.map((o) => {
+      const b = el("button", "quiz-option", o.text);
+      b.type = "button";
+      b.addEventListener("click", () => answer(q, o.i, buttons, order));
+      options.append(b);
+      return b;
+    });
+    quizCard.append(options);
+  }
+  function answer(q, picked, buttons, order) {
+    const ok = picked === q.answer;
+    if (ok) score++;
+    results[q.id] = ok ? "right" : "wrong";
+    store.set("mkvc-quiz", JSON.stringify(results));
+    buttons.forEach((b, k) => {
+      b.disabled = true;
+      const i = order[k].i;
+      if (i === q.answer) { b.classList.add("right"); b.append(el("span", "mark", "Correct answer")); }
+      else if (i === picked) { b.classList.add("wrong"); b.append(el("span", "mark", "Your answer")); }
+    });
+    const why = el("p", "quiz-why");
+    why.append(el("strong", ok ? "right" : "wrong", ok ? "Right. " : "Not quite. "), q.why + " ");
+    const read = el("a", "", "Read the section");
+    read.href = q.read;
+    why.append(read);
+    quizCard.append(why);
+    const actions = el("div", "quiz-actions");
+    const next = el("button", "quiz-next", qi + 1 < queue.length ? "Next question" : "See my score");
+    next.type = "button";
+    next.addEventListener("click", () => { qi++; renderQuestion(); quizCard.scrollIntoView({ block: "nearest" }); });
+    actions.append(next);
+    quizCard.append(actions);
+    showStats();
+    next.focus({ preventScroll: true });
+  }
+  function setQuiz(on) {
+    document.body.classList.toggle("quiz-on", on);
+    quizEl.hidden = !on;
+    quizToggle.setAttribute("aria-pressed", String(on));
+    quizToggle.textContent = on ? "Back to the guide" : "Quiz me";
+    if (on) {
+      if (!queue.length || qi >= queue.length) startQuiz(mode);
+      scrollTo({ top: document.querySelector(".intro").offsetHeight });
+    }
+  }
+  quizToggle.hidden = QUIZ.length === 0;
+  quizToggle.addEventListener("click", () => setQuiz(!document.body.classList.contains("quiz-on")));
+  modeChips.forEach((c) => c.addEventListener("click", () => startQuiz(c.dataset.mode)));
+  addEventListener("hashchange", () => { if (location.hash === "#quiz" && QUIZ.length) setQuiz(true); });
 
   // Keep heading offsets clear of the sticky bar, and mark the chapter in view.
   const tools = document.getElementById("tools");
@@ -430,9 +586,11 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
   if (["now", "soon", "later"].includes(saved)) setFilter(saved);
   apply();
   markCurrent();
-  if (location.hash) {
-    const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (el) { reset(); el.scrollIntoView({ block: "start" }); }
+  if (location.hash === "#quiz" && QUIZ.length) {
+    setQuiz(true);
+  } else if (location.hash) {
+    const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) { reset(); target.scrollIntoView({ block: "start" }); }
   }
 })();
 </script>

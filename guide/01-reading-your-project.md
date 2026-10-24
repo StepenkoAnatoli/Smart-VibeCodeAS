@@ -30,19 +30,19 @@ projects use different names for the same ideas.
 | `package.json` | The project's ID card: its name, the packages it uses (*dependencies*) and its commands (*scripts*, like `dev` and `build`) | Read it; let the AI or `npm` change it |
 | `package-lock.json` (or `pnpm-lock.yaml`, `yarn.lock`) | The *lockfile*: the exact version of every package installed | Never edit by hand; always commit it |
 | `node_modules/` | Thousands of downloaded packages. Huge, rebuilt by `npm install` | Never edit, never commit (it should be in `.gitignore`) |
-| `.env`, `.env.local` | Your secrets and settings for this computer | Edit yourself; **never commit** |
+| `.env`, `.env.local` | Your secrets and settings for this computer. Variables starting with `NEXT_PUBLIC_`, `VITE_`, `REACT_APP_` or `EXPO_PUBLIC_` are copied into the frontend and are public | Edit yourself; **never commit**; never give a secret a public prefix |
 | `.env.example` | A copy of `.env` with the values blanked out, so others know which settings exist | Commit it; keep it in sync |
 | `.gitignore` | The list of files Git should never save (`.env`, `node_modules`) | Check that `.env` is in it |
 | `src/` | "Source": where most of your app's code lives | This is what the AI edits |
 | `app/` or `pages/` | In Next.js, each folder or file here is a page or route of your site. `app/dashboard/page.tsx` is the page at `/dashboard` | AI edits it |
-| `app/api/` or `pages/api/` | Backend code: your API endpoints, which run on the server | AI edits it; check every route for login and permission checks |
+| `app/api/` or `pages/api/`, any `route.ts`, and any file starting with `"use server"` | Backend code that runs on the server: API endpoints, and Next.js *Server Actions*. Anyone can call these directly, not just your buttons | AI edits it; check every route and every server action for login and permission checks |
 | `components/` | Reusable pieces of the interface: buttons, cards, forms | AI edits it |
 | `lib/` or `utils/` | Shared helper code: database connections, formatting | AI edits it |
 | `public/` | Files served as they are: images, icons, `robots.txt` | Anything here is public |
 | `supabase/migrations/`, `prisma/schema.prisma`, `drizzle/` | Your database structure and its history of changes | Read every new migration before it runs on production |
 | `README.md` | The project's front page: what it is and how to run it | Keep it current; it helps you *and* your AI |
 | `CLAUDE.md`, `AGENTS.md`, `.cursor/rules` | Standing instructions your AI tool reads every session | Write your project rules here (see [Vibe coding well](02-vibe-coding-well.md)) |
-| `tsconfig.json`, `next.config.js`, `vite.config.ts`, `tailwind.config.js` | Settings for TypeScript, your framework and your styling | Rarely; ask before changing |
+| `tsconfig.json`, `next.config.ts` (or `.js`/`.mjs`), `vite.config.ts`, and `tailwind.config.js` in older Tailwind projects (Tailwind v4 keeps its settings in your main CSS file) | Settings for TypeScript, your framework and your styling | Rarely; ask before changing |
 | `.github/workflows/` | Automatic checks that run on GitHub (CI) | Keep them; don't let AI delete failing ones |
 | `Dockerfile` | Instructions to package the app as a container | Only if you deploy with Docker |
 | `.next/`, `dist/`, `build/` | Generated output of a build | Never edit, never commit |
@@ -68,7 +68,7 @@ you; this is so you know what it's doing.
 | `npm run build` | Make the production version. Errors here are the errors your host will hit when deploying |
 | `Ctrl+C` | Stop whatever is running in the terminal (like the dev server) |
 | `git status` | Show which files changed since your last commit |
-| `git add . && git commit -m "message"` | Save a checkpoint of everything you changed, with a description |
+| `git add .` then `git commit -m "message"` | Save a checkpoint of everything you changed, with a description. (On Mac/Linux you can join them with `&&`; the older Windows PowerShell doesn't accept that) |
 | `git push` | Send your commits to GitHub |
 
 Two habits: read a command before you approve it (especially anything with
@@ -191,7 +191,7 @@ fix.
   (`Authorization`) and content type.
 - **Query string:** the part of a URL after `?`: `/search?q=shoes&page=2`.
 - **Status code:** the number saying how a request went (200 OK, 404 not found,
-  500 server crashed). See the table in [Debugging with AI](07-debugging-with-ai.md#2-reading-an-error-message).
+  500 server crashed). See the table in [Debugging with AI](09-debugging-with-ai.md#2-reading-an-error-message).
 - **REST:** the most common style of API, built from URLs and HTTP methods.
   GraphQL and gRPC are other styles.
 - **SDK:** a ready-made package for using someone's API from your code, like
@@ -251,10 +251,14 @@ fix.
   it in the browser with JavaScript. *Server-side rendering* builds it on the
   server for each visit. *Static generation* builds it once, ahead of time.
 - **Server and client components:** in Next.js, components run on the server
-  unless the file starts with `"use client"`. Server components can safely use
-  secrets; client components are public.
-- **Middleware:** code that runs before every request (or a matching set), often
-  used to check logins or redirect.
+  unless the file starts with `"use client"` **or is imported by a file that
+  does**. Server components can use secrets; client components, and everything
+  they import, are public. Ask your AI to add `import "server-only"` to files
+  that use secrets, so a mistake fails the build instead of leaking.
+- **Middleware** (called `proxy.ts` in Next.js 16 and later): code that runs
+  before every request (or a matching set), often used to redirect people who
+  aren't logged in. It's not enough on its own: every route and server action
+  must still check who is asking.
 - **Edge:** running code on servers close to the user (on the CDN). It's fast,
   but often with fewer features and tighter limits than a normal server.
 - **Hydration:** the moment a server-rendered page "comes alive" in the browser.

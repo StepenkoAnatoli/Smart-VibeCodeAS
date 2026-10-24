@@ -32,21 +32,41 @@ for a long time.
 7. **[Your database, explained](guide/06-your-database.md)**: tables and how
    they connect, storing money and time correctly, constraints, deleting, and
    changing live data safely.
-8. **[Debugging with AI](guide/07-debugging-with-ai.md)**: how to read an error,
-   find where it really happened, give your AI the right clues, and escape the
-   loop where every "fix" brings a new error.
-9. **[How vibe-coded apps break](guide/08-how-vibe-coded-apps-break.md)**: 19
-   common disaster stories, why the AI wrote the code that caused each one, and
-   how to prevent it.
-10. **[Checklist and AI prompts](guide/09-checklist-and-ai-prompts.md)**: a
-   pre-launch checklist and copy-paste prompts that make your AI check these
-   things for you.
+8. **[Logins, done right](guide/07-logins-done-right.md)**: what your auth
+   provider doesn't handle for you: trusting the right user ID, roles,
+   redirects, email changes, sessions and two-factor login.
+9. **[Building AI features](guide/08-building-ai-features.md)**: tokens and
+   cost, choosing models, prompts in your app, structured output, streaming,
+   memory, answering from your own data (RAG), tools and agents, outages, and
+   testing AI output.
+10. **[Debugging with AI](guide/09-debugging-with-ai.md)**: how to read an
+    error, find where it really happened, give your AI the right clues, and
+    escape the loop where every "fix" brings a new error.
+11. **[How vibe-coded apps break](guide/10-how-vibe-coded-apps-break.md)**: 19
+    common disaster stories, why the AI wrote the code that caused each one,
+    and how to prevent it.
+12. **[Rescuing a messy AI-built project](guide/11-rescuing-a-messy-project.md)**:
+    getting back in control of an app nobody understands anymore, step by step.
+13. **[Checklist and AI prompts](guide/12-checklist-and-ai-prompts.md)**: a
+    pre-launch checklist and copy-paste prompts that make your AI check these
+    things for you.
 
-## Read it on your phone
+## Read it on your phone, and test yourself
 
-`site/index.html` is the whole guide on one page, with search, Now/Soon/Later
-filters, copy buttons on every prompt, and a checklist that remembers your
-ticks. It's built from the chapters by `scripts/build_page.py`.
+The whole guide is also one phone-friendly page, with search, Now/Soon/Later
+filters, copy buttons on every prompt, a checklist that remembers your ticks,
+and a **quiz** on the essentials (43 questions, each linked to its
+explanation).
+
+- `docs/index.html` is that page as a website. To publish it for free with
+  GitHub Pages, go to the repo's **Settings → Pages**, choose **Deploy from a
+  branch**, pick `main` and the `/docs` folder, and save. GitHub shows the
+  address after a minute or two, and the site updates on every merge.
+- `site/index.html` is the same page without the outer HTML wrapper, for hosts
+  that add their own.
+
+Both are built from the chapters and `quiz/questions.json` by
+`scripts/build_page.py`.
 
 ## The 30-second version
 
@@ -66,16 +86,20 @@ ticks. It's built from the chapters by `scripts/build_page.py`.
 
 ## Keeping it accurate
 
-A GitHub Action (`.github/workflows/check-guide.yml`) runs
-`scripts/check_guide.py` on every change. It fails if a link between pages
-breaks or if any of the 111 reel terms loses its entry. Once a week it also
-checks that outside links still load. To run it yourself:
+A GitHub Action (`.github/workflows/check-guide.yml`) runs on every change. It
+fails if a link between pages breaks, if any of the 111 reel terms loses its
+entry, if a quiz question is broken, or if the built pages are out of date.
+Once a week it also checks that outside links still load. To run it yourself:
 
 ```
-python3 scripts/check_guide.py              # links inside the repo + term coverage
+python3 scripts/check_guide.py              # links, reel terms and quiz
 python3 scripts/check_guide.py --external   # also check outside links
-python3 scripts/build_page.py               # rebuild site/index.html after editing a chapter
+python3 scripts/build_page.py               # rebuild the pages after editing a chapter
 ```
 
-The check also fails if `site/index.html` is out of date, so rebuild it in the
-same change as any chapter edit.
+Rebuild the pages in the same change as any chapter edit.
+
+## Contributing
+
+Found a mistake, or know something vibe coders are missing? See
+[CONTRIBUTING.md](CONTRIBUTING.md). Reporting a confusing explanation counts.

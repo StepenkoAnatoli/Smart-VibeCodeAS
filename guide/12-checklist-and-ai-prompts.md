@@ -16,14 +16,17 @@ whether an item is done, use the matching prompt further down.
 - [ ] No secret keys in frontend code or in variables starting with
       `NEXT_PUBLIC_`, `VITE_`, `REACT_APP_` or `EXPO_PUBLIC_`
 - [ ] Any key that was ever committed to Git has been replaced at the provider
-- [ ] GitHub secret scanning is turned on for the repo
+- [ ] The repo has been checked for secrets (GitHub only scans public repos
+      for free; for a private repo, ask your AI or use a scanner such as
+      gitleaks)
 
 **Logins and access**
 
 - [ ] Login uses an auth provider, not homemade password storage
-- [ ] Every API route that reads or changes data checks **who** the user is
-      **and** that they own that data
-- [ ] Supabase: Row Level Security is on for every table, with policies.
+- [ ] Every API route and server action that reads or changes data checks
+      **who** the user is **and** that they own that data
+- [ ] Supabase: Row Level Security is on for every table, with policies that
+      check ownership (no "allow everyone" policies).
       Firebase: Security Rules are not in test mode
 - [ ] Tested by hand: logged in as user A, tried to read and change user B's
       data, and it was blocked
@@ -45,13 +48,14 @@ whether an item is done, use the matching prompt further down.
 - [ ] No secrets in the system prompt
 - [ ] AI output is shown as text or sanitized Markdown, never raw HTML, and is
       never run as code or SQL
-- [ ] Every user has an AI quota, and every call sets `max_tokens`
+- [ ] Every user has an AI quota, and every call sets a maximum output length
 - [ ] The model version is pinned in a config setting
 
 **Money**
 
-- [ ] Billing alerts and spending caps on every provider (hosting, database, AI
-      APIs, email/SMS)
+- [ ] Billing alerts on every provider (hosting, database, AI APIs,
+      email/SMS), and hard spending caps where offered. A Google Cloud or AWS
+      "budget" only alerts; it doesn't stop spending
 - [ ] Rate limits on login, signup, password reset, and every endpoint that
       calls a paid API
 - [ ] Payment status comes from verified webhooks, not from the browser
@@ -236,8 +240,8 @@ user, or a web page, email or document the AI reads, contain instructions
 that change what the AI does (prompt injection)? What tools, data or actions
 can the AI reach, and are permissions checked in code rather than in the
 prompt? Is AI output ever shown as raw HTML, or run as code or SQL? Are there
-secrets in the system prompt? Is there a per-user quota and max_tokens on
-every call? Show the worst realistic attack and the smallest fixes.
+secrets in the system prompt? Is there a per-user quota and a maximum
+output length on every call? Show the worst realistic attack and the smallest fixes.
 ```
 
 ### 12. Tests for the money paths
@@ -275,7 +279,7 @@ privacy policy.
 ## Red flags: stop and ask why
 
 If you see your AI do any of these, pause and use prompt 9 above. If it's
-doing them while stuck on a bug, see [Debugging with AI](07-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it).
+doing them while stuck on a bug, see [Debugging with AI](09-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it).
 
 - Turns off Row Level Security, or sets Firebase rules to
   `allow read, write: if true`

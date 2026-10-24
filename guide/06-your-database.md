@@ -216,9 +216,11 @@ before it runs on production, and back up first. (See *Database Migrations* in
 ### Changing a column that has data — 🟡 Soon
 
 Renaming or retyping a column that holds data, or deleting it, can break the
-running app between deploy and migration, or lose data. The safe pattern is
-three steps: **add** the new column, **copy** the data and switch the code to
-use it, and only later **remove** the old one. Ask the AI for this
+running app between deploy and migration, or lose data. The safe pattern:
+**add** the new column, make the code **write to both** columns, **copy** the
+old data across, switch the code to **read** from the new column, and only
+later **remove** the old one. (Skip the "write to both" step and any rows saved
+during the copy are lost.) Ask the AI for this
 "expand and contract" approach on any live table.
 
 ### Test data and seed scripts — 🟡 Soon
@@ -266,10 +268,11 @@ Security. For each problem, show the safe migration to fix it.
 ```
 I need to [rename / change the type of / remove] the column [name] in
 [table], which already has real data. Plan it as an expand-and-contract
-change: add the new column, backfill the data, switch the code, and remove the
-old column in a later migration. Show each migration and the order of deploys.
+change: add the new column, deploy code that writes to both columns, backfill
+the old rows, switch reads to the new column, then remove the old column in a
+later migration. Show each migration and the order of deploys.
 ```
 
 ---
 
-Next: [Debugging with AI: how to get unstuck](07-debugging-with-ai.md)
+Next: [Logins, done right](07-logins-done-right.md)

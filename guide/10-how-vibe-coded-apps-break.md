@@ -47,8 +47,9 @@ change, **every row of every table**: all users, all orders, all messages.
 **Why the AI does it:** Security rules cause "permission denied" errors during
 development, and turning them off makes the errors disappear.
 
-**Prevent it:** Row Level Security on for every table, with a policy per table;
-then test it by trying to read another user's data. See *Broken Access Control*
+**Prevent it:** Row Level Security on for every table, with policies that check
+the row belongs to the logged-in user (an "allow everyone" policy puts the hole
+right back). Then test it by trying to read another user's data. See *Broken Access Control*
 in [the reel, explained](03-the-reel-explained.md#1-security).
 
 ### The admin button that was only hidden — 🔴 Now
@@ -98,8 +99,10 @@ later becomes) public.
 **Why the AI does it:** Early on, `.env` wasn't in `.gitignore`, or the AI
 pasted a key into a config file to get something working.
 
-**Prevent it:** Put `.env` in `.gitignore` before the first commit, and turn on
-GitHub secret scanning. If a key was ever committed, **replace it at the
+**Prevent it:** Put `.env` in `.gitignore` before the first commit. GitHub
+scans *public* repos for leaked keys automatically, but not private repos on a
+free account, so ask your AI to check for secrets before you push, or use a
+free scanner such as gitleaks. If a key was ever committed, **replace it at the
 provider**; deleting the file doesn't help.
 
 ### The package that didn't exist — 🔴 Now
@@ -140,7 +143,7 @@ protection.
 **Why the AI does it:** It's optimizing for "make the error go away".
 
 **Prevent it:** Use the guard prompt in the
-[checklist](09-checklist-and-ai-prompts.md#9-the-guard-paste-this-whenever-your-ai-proposes-a-fix),
+[checklist](12-checklist-and-ai-prompts.md#9-the-guard-paste-this-whenever-your-ai-proposes-a-fix),
 and the "Never" rules in your rules file (see [Vibe coding well](02-vibe-coding-well.md#3-what-your-ai-can-and-cant-see)).
 
 ---
@@ -197,8 +200,9 @@ find out from the invoice.
 look fine in a quick test.
 
 **Prevent it:** Rate limits and per-user quotas on every paid endpoint,
-`max_tokens` on AI calls, and billing alerts and hard spending caps on every
-provider. See *Cost Optimization* in [the reel, explained](03-the-reel-explained.md#5-operations--resilience).
+a maximum output length on AI calls, billing alerts on every provider, and
+hard spending caps wherever a provider offers them (a Google Cloud or AWS
+"budget" only sends alerts). See *Cost Optimization* in [the reel, explained](03-the-reel-explained.md#5-operations--resilience).
 
 ---
 
@@ -311,4 +315,4 @@ Then list the fixes in order of how badly each could hurt me.
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](09-checklist-and-ai-prompts.md)
+Next: [Rescuing a messy AI-built project](11-rescuing-a-messy-project.md)

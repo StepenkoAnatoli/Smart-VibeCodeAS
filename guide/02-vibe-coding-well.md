@@ -197,7 +197,7 @@ For each change, check:
 2. **The size.** A tiny request shouldn't produce a huge change.
 3. **What was removed.** Deleted checks, tests and error handling are the
    dangerous changes.
-4. **The red flags** in the [checklist](09-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why).
+4. **The red flags** in the [checklist](12-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why).
 
 Then ask the AI to explain the change in plain words, and to list anything it
 assumed or didn't do.
@@ -302,7 +302,7 @@ domain, GitHub, database and payment accounts should all be in your name (see
 AI tools charge by usage in different ways: messages, credits or tokens. Long
 conversations and big files use more, and an agent left running loops can burn
 through a month's allowance. Check your plan's limits, and stop runs that are
-going in circles (see [Debugging with AI](07-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it)).
+going in circles (see [Debugging with AI](09-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it)).
 
 ---
 

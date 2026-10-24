@@ -100,7 +100,9 @@ you know exist. That gap is what this repo is for.
   Supabase is Postgres underneath.
 - **Deploy**: put a new version of your app live.
 - **Environment variables** (the `.env` file): settings and secrets kept
-  outside your code.
+  outside your code. Careful: any variable whose name starts with
+  `NEXT_PUBLIC_`, `VITE_`, `REACT_APP_` or `EXPO_PUBLIC_` is copied into the
+  frontend and is public, so never give a secret one of those names.
 - **Repository (repo)**: your project folder, tracked by Git.
 - **Git**: the full history of your project, and your undo button. It isn't in
   the reel, but it's the most important tool on this page.

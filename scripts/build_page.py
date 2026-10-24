@@ -2,11 +2,14 @@
 """Build the one-page, phone-friendly version of the guide.
 
 Usage:
-    python3 scripts/build_page.py           # write site/index.html
-    python3 scripts/build_page.py --check   # fail if site/index.html is out of date
+    python3 scripts/build_page.py           # write site/index.html and docs/index.html
+    python3 scripts/build_page.py --check   # fail if either is out of date
 
 The page embeds every chapter's Markdown and renders it in the browser, with
-search, Now/Soon/Later filters and copy buttons. Uses only the standard library.
+search, Now/Soon/Later filters, copy buttons and a quiz. site/index.html is the
+page body (for hosts that add the document wrapper, like Claude artifacts);
+docs/index.html is a complete page for GitHub Pages. Uses only the standard
+library.
 """
 import argparse
 import json
@@ -15,13 +18,30 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from check_guide import GLOSSARY, HEADING_FOR, REEL_TERMS  # noqa: E402
+from check_guide import GLOSSARY, HEADING_FOR, QUIZ, REEL_TERMS, heading_anchor, load_quiz  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 GUIDE = ROOT / "guide"
 TEMPLATE = ROOT / "scripts" / "page_template.html"
 OUTPUT = ROOT / "site" / "index.html"
-CHECKLIST = GUIDE / "09-checklist-and-ai-prompts.md"
+PAGES_OUTPUT = ROOT / "docs" / "index.html"
+
+# Base styles the artifact host adds around site/index.html; the standalone page needs them too.
+STANDALONE_HEAD = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+"""
+BODY_START = '<div class="wrap" id="top">'
+# The chapter whose checkboxes the page remembers, found by name so renumbering can't break it.
+CHECKLIST = next(GUIDE.glob("*-checklist-and-ai-prompts.md"))
 
 # Short names for the chapter menu, by file-name prefix.
 NAV_LABELS = {
@@ -32,9 +52,12 @@ NAV_LABELS = {
     "04": "What you need",
     "05": "Beyond the reel",
     "06": "Your database",
-    "07": "Debugging",
-    "08": "How apps break",
-    "09": "Checklist",
+    "07": "Logins",
+    "08": "AI features",
+    "09": "Debugging",
+    "10": "How apps break",
+    "11": "Rescuing a project",
+    "12": "Checklist",
 }
 
 LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
@@ -80,11 +103,20 @@ def build():
             "md": rewrite_links(f.read_text(), ids_by_file[f.name], ids_by_file),
         })
     numbers = {HEADING_FOR.get(term, term): i + 1 for i, term in enumerate(REEL_TERMS)}
+    quiz = []
+    if QUIZ.exists():
+        for q in load_quiz():
+            target = GUIDE / q["file"]
+            quiz.append({
+                "id": q["id"], "q": q["q"], "options": q["options"], "answer": q["answer"], "why": q["why"],
+                "read": f"#{ids_by_file[target.name]}-{heading_anchor(target, q['heading'])}",
+            })
     data = json.dumps({
         "chapters": chapters,
         "numbers": numbers,
         "glossary": ids_by_file[GLOSSARY.name],
         "checklist": ids_by_file[CHECKLIST.name],
+        "quiz": quiz,
     }, ensure_ascii=False)
     # Keep the embedded JSON from closing its <script> tag early.
     data = data.replace("</", "<\\/").replace("<!--", "<\\u0021--")
@@ -100,15 +132,24 @@ def main():
     args = parser.parse_args()
 
     page = build()
+    # The template's title, meta tags and styles come before the first wrapper; they go in <head>.
+    head, body = page.split(BODY_START, 1)
+    standalone = f"{STANDALONE_HEAD}{head}</head>\n<body>\n{BODY_START}{body}\n</body>\n</html>\n"
+    outputs = {OUTPUT: page, PAGES_OUTPUT: standalone}
     if args.check:
-        if not OUTPUT.exists() or OUTPUT.read_text() != page:
-            print("error: site/index.html is out of date. Run: python3 scripts/build_page.py")
+        stale = [path for path, text in outputs.items() if not path.exists() or path.read_text() != text]
+        for path in stale:
+            print(f"error: {path.relative_to(ROOT)} is out of date. Run: python3 scripts/build_page.py")
+        if stale:
             return 1
-        print("OK: site/index.html matches the guide.")
+        print("OK: site/index.html and docs/index.html match the guide.")
         return 0
-    OUTPUT.parent.mkdir(exist_ok=True)
-    OUTPUT.write_text(page)
-    print(f"Wrote {OUTPUT.relative_to(ROOT)} ({len(page) // 1024} KB).")
+    for path, text in outputs.items():
+        path.parent.mkdir(exist_ok=True)
+        path.write_text(text)
+        print(f"Wrote {path.relative_to(ROOT)} ({len(text) // 1024} KB).")
+    # GitHub Pages: serve the files as they are, without Jekyll processing.
+    (PAGES_OUTPUT.parent / ".nojekyll").touch()
     return 0
 
 
