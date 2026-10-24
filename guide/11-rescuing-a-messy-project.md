@@ -45,8 +45,10 @@ makes the rescue longer. Tell users (if any) that you're doing maintenance.
 
 Then make sure nothing can be lost:
 
-- **Commit everything** and push it to a GitHub repo in **your** name. If the
-  app lives in an app builder, connect it to GitHub or export it first.
+- **Commit everything,** but first make sure `.env` and any other files holding
+  keys are listed in `.gitignore`. Then push it to a **private** GitHub repo
+  in **your** name. If the app lives in an app builder, connect it to GitHub
+  or export it first.
 - **Back up the database** and download a copy. Check your plan's backup
   settings.
 - **List every account and service** the app uses (hosting, database, auth,
@@ -187,7 +189,10 @@ Projects often start in an app builder and outgrow it. The usual path:
 2. **Run it locally** (step 2), with your own `.env` settings.
 3. **Keep the backend services you already use.** If the database and logins
    are on Supabase, your users and data stay where they are; only the code
-   moves.
+   moves. This only works if that Supabase project is in **your own** Supabase
+   account. If your builder hosts the backend for you (Lovable Cloud, for
+   example), you must first migrate the data and users to a project you own.
+   Plan for it, and check whether users will need to reset their passwords.
 4. **Deploy from GitHub** to a host like Vercel or Netlify, on a temporary
    address first. Set the same environment variables there.
 5. **Test everything** on the temporary address: login (add the new address to

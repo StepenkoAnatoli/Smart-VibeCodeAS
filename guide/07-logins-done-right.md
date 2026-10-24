@@ -46,7 +46,7 @@ answer the first and forget the second (see *Broken Access Control* in
 | **Email + password** | The classic | Users reuse passwords, so you need rate limits and ideally a check against known leaked passwords. Let your provider store them |
 | **Magic link / one-time code** | You email a link or a 6-digit code; no password | Simple and no passwords to leak, but the account is only as safe as the user's email, and emails can be slow or land in spam |
 | **Social login** ("Continue with Google / Apple / GitHub") | Another company vouches for the user (OAuth / OpenID Connect) | Fast sign-up. iOS apps that offer third-party social logins must also offer an equivalent privacy-friendly option, such as Sign in with Apple (check Apple's current review guidelines) |
-| **Passkeys** | The phone or laptop proves who you are with a fingerprint, face or PIN, using a key that never leaves the device | The most phishing-resistant option and increasingly supported by auth providers. Offer it alongside another method |
+| **Passkeys** | The phone or laptop proves who you are with a fingerprint, face or PIN, using a secret key that is never sent to your website (it stays on the device or syncs through the user's password manager) | The most phishing-resistant option and increasingly supported by auth providers. Offer it alongside another method |
 
 **What it means for you:** Two or three methods is plenty. Every extra method
 is another flow to test and another way in.
@@ -99,8 +99,10 @@ of allowed callback URLs.
   and end on a fake page asking for a password.
 
 **Do:** Keep the allowed callback list exact (your production domain and your
-preview pattern). Only redirect to paths on your own site (starting with a
-single `/`), never to full URLs from a parameter.
+preview pattern). Only redirect to paths on your own site, never to full URLs
+from a parameter: the value must start with a single `/`, and the second
+character must not be another `/` or a `\` (browsers treat `/\evil.example`
+as another site). Better still, check it against a list of your own pages.
 
 ### Unverified emails — 🔴 Now
 

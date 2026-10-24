@@ -34,16 +34,18 @@ Labels as elsewhere: 🔴 **Now**, 🟡 **Soon**, ⚪ **Later**.
 **What it is:** Your server sends the model a list of **messages** and gets
 one reply back. Usually that's a *system* message (your instructions), then the
 conversation so far: *user* messages and the model's earlier *assistant*
-replies. The model remembers nothing between calls. To continue a chat, your
-app sends the **whole conversation again**, every time.
+replies. The model remembers nothing between calls. To continue a chat, the
+**whole conversation** has to be read again on every call. Usually your app
+resends it; some APIs can store it for you, but you're still billed for all of
+it as input each time.
 
 **Picture it:** A brilliant consultant with no memory. Each time you ask a
 follow-up, you hand over the entire file of everything said so far.
 
 **What it means for you:**
 
-- A chat gets **more expensive with every message**, because each new message
-  resends all the earlier ones.
+- A chat gets **more expensive with every message**, because each new call
+  includes (and bills) all the earlier ones.
 - "Memory" across chats is something *you* build, by saving and resending
   information. It isn't a property of the model.
 - The call must happen on your **server**, with the key in server-side
@@ -156,7 +158,8 @@ reply.
 **What it is:** When your code needs to *use* the answer (save fields to the
 database, show a list, decide what to do next), free text is fragile. Most
 providers can make the model reply in an exact JSON shape you define, often
-called *structured outputs* or *JSON mode*, or through *tool calling*.
+called *structured outputs*, or through *tool calling*. (Plain *JSON mode* only
+promises valid JSON, not your shape.)
 
 **What it means for you:** Ask your AI to use the provider's structured-output
 feature with a schema, and **still validate** the result with Zod or Pydantic

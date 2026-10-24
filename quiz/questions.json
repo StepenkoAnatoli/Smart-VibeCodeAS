@@ -202,9 +202,9 @@
   {
     "id": "chat-cost-grows",
     "q": "Why does an AI chat get more expensive with every message?",
-    "options": ["Providers charge more later in the day", "Your app resends the whole conversation on every call", "Answers always get longer"],
+    "options": ["Providers charge more later in the day", "The whole conversation is sent and billed again on every call", "Answers always get longer"],
     "answer": 1,
-    "why": "The model remembers nothing between calls, so each new message includes everything said so far.",
+    "why": "The model remembers nothing between calls, so each call includes, and bills, everything said so far.",
     "file": "08-building-ai-features.md", "heading": "Every call starts from zero"
   },
   {
@@ -241,8 +241,8 @@
   },
   {
     "id": "tool-calls",
-    "q": "When an AI model 'calls a tool' in your app, who actually performs the action?",
-    "options": ["The model itself", "Your code, which must check permissions and validate the request first", "The AI provider"],
+    "q": "When an AI model asks to use one of your app's own functions (like create_ticket), who actually runs it?",
+    "options": ["The model itself", "Your code, which must check permissions and validate the request first", "The user's browser"],
     "answer": 1,
     "why": "The model only asks. Your code decides, and that's where every safety check belongs.",
     "file": "08-building-ai-features.md", "heading": "Tool calling"
