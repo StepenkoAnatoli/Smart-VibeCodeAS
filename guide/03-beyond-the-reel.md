@@ -479,4 +479,4 @@ run them in CI.
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](04-checklist-and-ai-prompts.md)
+Next: [Debugging with AI: how to get unstuck](04-debugging-with-ai.md)

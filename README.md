@@ -23,7 +23,10 @@ for a long time.
 4. **[Beyond the reel](guide/03-beyond-the-reel.md)**: what the reel left out
    about launching and running an app: securing AI features, taking payments,
    legal basics, testing, launch day, and maintenance after launch.
-5. **[Checklist and AI prompts](guide/04-checklist-and-ai-prompts.md)**: a
+5. **[Debugging with AI](guide/04-debugging-with-ai.md)**: how to read an error,
+   find where it really happened, give your AI the right clues, and escape the
+   loop where every "fix" brings a new error.
+6. **[Checklist and AI prompts](guide/05-checklist-and-ai-prompts.md)**: a
    pre-launch checklist and copy-paste prompts that make your AI check these
    things for you.
 
@@ -42,3 +45,15 @@ for a long time.
   online
 - 🟡 **Soon**: once real people use it, or when you hit the problem
 - ⚪ **Later**: know the word; skip the details for now
+
+## Keeping it accurate
+
+A GitHub Action (`.github/workflows/check-guide.yml`) runs
+`scripts/check_guide.py` on every change. It fails if a link between pages
+breaks or if any of the 111 reel terms loses its entry. Once a week it also
+checks that outside links still load. To run it yourself:
+
+```
+python3 scripts/check_guide.py              # links inside the repo + term coverage
+python3 scripts/check_guide.py --external   # also check outside links
+```

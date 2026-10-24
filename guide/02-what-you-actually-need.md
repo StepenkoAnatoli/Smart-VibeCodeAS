@@ -51,7 +51,7 @@ matter more than most of what's on it.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](04-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](05-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -150,7 +150,7 @@ volunteers the rest.
   alerts, tests.
 
 The fix is cheap: know the words, then ask. The
-[checklist and copy-paste prompts](04-checklist-and-ai-prompts.md) do exactly
+[checklist and copy-paste prompts](05-checklist-and-ai-prompts.md) do exactly
 that.
 
 ---
