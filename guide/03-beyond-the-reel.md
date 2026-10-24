@@ -32,6 +32,11 @@ you *which questions to look up* for where you and your users live.
 9. [Running it week to week](#9-running-it-week-to-week)
 10. [Keeping the codebase healthy](#10-keeping-the-codebase-healthy)
 
+**Part C: Only if it applies to you**
+
+11. [Teams and business customers](#11-teams-and-business-customers)
+12. [Mobile apps](#12-mobile-apps)
+
 ---
 
 # Part A: Before you launch
@@ -247,6 +252,16 @@ password manager, turn on 2FA everywhere, save recovery codes somewhere safe,
 make sure every account (domain, hosting, GitHub, payments) is in **your**
 name rather than a freelancer's, and turn on **auto-renew for your domain**. A
 lapsed domain takes your app and your email down at once.
+
+### A way to report security problems — 🟡 Soon
+
+Sooner or later someone will find a hole in your app. Make it easy for them to
+tell you rather than tweet about it. **Do:** Publish a security contact
+address, ideally in a `/.well-known/security.txt` file on your site (a small
+standard text file, RFC 9116, that says where to send reports). When a report
+arrives, thank the person, check it quickly, fix it, and tell them when it's
+fixed. Expect some "beg bounty" emails too: automated scans of trivial issues
+sent with a request for payment. Check the claim before you pay or panic.
 
 ### Working safely with AI coding agents — 🔴 Now
 
@@ -476,6 +491,111 @@ TypeScript (instead of plain JavaScript) and a linter (like ESLint) catch whole
 classes of mistakes before they run, including many your AI makes. They also
 give your AI clearer feedback to fix its own errors. Turn them on early, and
 run them in CI.
+
+---
+
+# Part C: Only if it applies to you
+
+## 11. Teams and business customers
+
+If companies sign up as a group (a team, a workspace, an organization) and pay
+for it, a few things change. People in this world call each customer
+organization a *tenant*.
+
+### Keeping each company's data separate — 🔴 Now (if you sell to teams)
+
+**What it is:** Every company's data must stay invisible to every other
+company, even though they all live in the same database. It's access control
+one level up: not just "is this *your* record?" but "is this *your company's*
+record?"
+
+**Picture it:** An office building where each tenant's key opens their own
+floor, never the floor below.
+
+**What it means for you:** Leaking one customer's data to another is the
+mistake that ends business deals. Give every row an organization ID, filter by
+it in every query, and write your Row Level Security policies around
+membership ("the user belongs to this row's organization"). Test it with two
+organizations: as a member of company A, try to reach company B's data.
+
+### Roles and invitations — 🟡 Soon
+
+Teams need roles (owner, admin, member) and a way to invite people. **Do:**
+Make invite links expire and work once, make sure nobody can raise their own
+role, remove access immediately when someone is removed from a team, and don't
+let the last owner leave a team with nobody in charge.
+
+### Team billing and seats — 🟡 Soon
+
+The organization pays, not the individual. Decide how you charge (per seat, per
+team, by usage), what happens when someone joins or leaves mid-month, and what
+the whole team can still do when the company's payment fails.
+
+### Company logins (SSO) — ⚪ Later
+
+Larger companies want employees to log in with their work account, using
+*single sign-on* (SSO), usually over the SAML or OIDC standards. Some also want
+accounts created and removed automatically from their staff directory, called
+*SCIM*. Auth providers such as WorkOS, Clerk and Auth0 offer these, often as a
+paid extra. Add them when a customer asks.
+
+### Security questionnaires and compliance — ⚪ Later
+
+Business buyers often send a long security questionnaire before they sign, and
+some ask for a formal audit report such as SOC 2. EU customers may ask for a
+*data processing agreement* (DPA) under GDPR. **Do:** Keep one document that
+answers the usual questions: where data is stored, who can access it, how
+backups and encryption work, and what you do in an incident. Most of the answers
+are in this guide's checklist.
+
+---
+
+## 12. Mobile apps
+
+If you ship an app to the App Store or Google Play, the web rules still apply,
+plus these.
+
+### Secrets inside the app — 🔴 Now
+
+Anything bundled into your app can be pulled out of it, just like frontend code
+in a browser. Never put secret keys in the app. Call your own backend, and keep
+the secrets there.
+
+### Old versions never go away — 🔴 Now
+
+On the web, everyone gets your new version on their next visit. With an app,
+people keep old versions for months. Your backend must keep working for the
+versions people still have (see *API Versioning*). Build in a "minimum
+supported version" check from your first release, so you can ask users to
+update when you must.
+
+### App store review — 🟡 Soon
+
+Apple and Google review every version before it goes live, and rejections are
+common for avoidable reasons: a broken login, no test account for the reviewer,
+no in-app account deletion, or selling digital goods outside their in-app
+purchase systems where that isn't allowed. The payment rules differ by country
+and have been changing, so read the current guidelines before you build
+payments. Leave time for review before any launch date.
+
+### Updates without a store release — 🟡 Soon
+
+Tools such as Expo's EAS Update can push JavaScript and asset changes straight
+to installed apps without a new store review. They can't change native code,
+and the stores limit what such updates may change. They're very useful for
+urgent bug fixes, as long as you stay within the rules.
+
+### Push notifications — 🟡 Soon
+
+Users must give permission, and they turn notifications off quickly if you send
+too many. Device tokens expire and change, so remove dead ones. The key that
+sends notifications is a server secret.
+
+### Crashes and bad networks — 🟡 Soon
+
+Phones lose signal in elevators and on trains, so test what your app does
+offline and on a weak connection. Add crash reporting (Sentry or Firebase
+Crashlytics), because users rarely report crashes; they just delete the app.
 
 ---
 
