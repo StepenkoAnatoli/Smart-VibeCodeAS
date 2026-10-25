@@ -1028,7 +1028,8 @@ sequenceDiagram
   participant S as Stripe
   U->>A: Click Upgrade
   A->>S: Create a checkout session (price from your server)
-  S-->>U: Stripe's payment page
+  S-->>A: Checkout page link
+  A-->>U: Send the user to Stripe's payment page
   U->>S: Pays
   S-->>U: Redirect back to your success page (just a thank-you)
   S->>A: Webhook: payment succeeded

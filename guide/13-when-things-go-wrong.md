@@ -45,8 +45,9 @@ more things.*
 2. **Stop the damage first.** Revoke the leaked key, switch off the broken
    feature, roll back the bad deploy, take the leaking route offline. A
    temporarily broken feature is better than an ongoing leak.
-3. **Work out what's affected:** which data, which users, since when. Read
-   logs; don't delete them.
+3. **Work out what's affected:** which data, which users, since when. Export
+   or screenshot the logs right away: on free and starter plans they often
+   disappear within hours or a day.
 4. **Fix the cause and recover,** carefully, one step at a time.
 5. **Tell the people affected** (section 3).
 6. **Learn from it** (section 4).
@@ -97,11 +98,13 @@ with database access leaked.
 
 1. **Close the hole:** fix the Row Level Security policy, take the route
    offline, or replace the key.
-2. **Keep the evidence.** Don't delete logs or accounts; you'll need them to
-   understand what happened.
+2. **Save the evidence now.** Don't delete logs or accounts, and export or
+   screenshot the logs immediately: on free and starter plans they often
+   disappear within hours or a day.
 3. **Work out the scope:** which data (emails, names, addresses, payment
-   details, messages), how many people, and over what time period. Database and
-   host logs can show which records were read and from where.
+   details, messages), how many people, and over what time period. Logs can
+   show which pages and tables were requested and from where, but often not
+   exactly which records. If you can't rule something out, assume it was seen.
 4. **End sessions and replace keys** that may be affected.
 5. **Check your legal duties now, not next week.** Under the EU's GDPR, for
    example, a breach that's a risk to people's rights must usually be reported
@@ -138,7 +141,10 @@ know, we're on it".
 3. **Restore your backup into a new, separate database first,** never straight
    over production. Compare it with what's left, then copy back only what's
    missing. If your plan has *point-in-time recovery*, you can restore to the
-   minute before the damage.
+   minute before the damage, but choose the option that restores into a
+   **new** project (Supabase calls it "restore to a new project"). Restoring in
+   place overwrites production and loses everything written since that
+   moment.
 4. Tell the users whose data was affected.
 
 ### One of your own accounts was taken over — 🔴 Now

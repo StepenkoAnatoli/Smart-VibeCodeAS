@@ -626,7 +626,7 @@
       "Delete the failing test"
     ],
     "answer": 1,
-    "why": "A red X means something broke. Fix the cause, never the test.",
+    "why": "A red X means something broke. Fix the cause, and don't change the test unless you've agreed the test itself is wrong.",
     "file": "10-testing-for-non-coders.md",
     "heading": "Run them automatically"
   },

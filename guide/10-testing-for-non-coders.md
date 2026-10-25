@@ -131,7 +131,9 @@ flowchart LR
 
 *Every change goes through the same checks before it reaches users.*
 
-**The rule:** a red X means "don't merge". Fix the cause, never the test.
+**The rule:** a red X means "don't merge". Fix the cause. Only change a test
+if you've agreed the test itself is wrong, for example because you changed the
+feature on purpose.
 
 ---
 
