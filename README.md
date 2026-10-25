@@ -74,11 +74,20 @@ for a long time.
     pre-launch checklist and copy-paste prompts that make your AI check these
     things for you.
 
+**Put it into practice**
+
+17. **[Practice project](guide/16-practice-project.md)**: build a small private
+    notes app in 13 steps, with a prompt and a "check it yourself" list for
+    each, including trying to break in, payments in test mode, and fire drills.
+18. **[Working with a developer](guide/17-working-with-a-developer.md)**: when
+    to bring in a person, giving access safely, briefing, code reviews,
+    quotes and agreements, and offboarding.
+
 ## Read it on your phone, and test yourself
 
 The whole guide is also one phone-friendly page, with search, Now/Soon/Later
 filters, copy buttons on every prompt, a checklist that remembers your ticks,
-and a **quiz** on the essentials (55 questions, each linked to its
+and a **quiz** on the essentials (58 questions, each linked to its
 explanation).
 
 - `docs/index.html` is that page as a website. To publish it for free with
@@ -108,6 +117,11 @@ Both are built from the chapters and `quiz/questions.json` by
 - ⚪ **Later**: know the word; skip the details for now
 
 ## Keeping it accurate
+
+**Last fact-checked: October 2026.** Every chapter and the quiz were reviewed
+by independent AI fact-checkers working from official sources, and every
+confirmed finding was fixed. The process is in [FACT-CHECK.md](FACT-CHECK.md),
+and a GitHub Action opens a reminder issue every three months to run it again.
 
 A GitHub Action (`.github/workflows/check-guide.yml`) runs on every change. It
 fails if a link between pages breaks, if any of the 111 reel terms loses its
