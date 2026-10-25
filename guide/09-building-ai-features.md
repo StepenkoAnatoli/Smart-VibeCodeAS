@@ -4,7 +4,7 @@ Many vibe-coded apps *are* AI apps: a chat assistant, a summarizer, a writing
 helper, a tool that reads documents. Calling an AI model takes a few lines of
 code, and AI tools write those lines happily. What they rarely explain is how
 these features cost money, fail, drift and get abused. This chapter covers
-that. The security side is in [Beyond the reel](05-beyond-the-reel.md#1-your-ai-features).
+that. The security side is in [Beyond the reel](06-beyond-the-reel.md#1-your-ai-features).
 
 It applies to any provider (OpenAI, Anthropic, Google and others); names of
 specific settings vary a little between them.
@@ -50,7 +50,7 @@ follow-up, you hand over the entire file of everything said so far.
   information. It isn't a property of the model.
 - The call must happen on your **server**, with the key in server-side
   environment variables (see *The API key in the browser* in
-  [How vibe-coded apps break](10-how-vibe-coded-apps-break.md#security)).
+  [How vibe-coded apps break](12-how-vibe-coded-apps-break.md#security)).
 
 ---
 
@@ -113,7 +113,7 @@ the newest version, and a specific, dated version. Aliases can change behavior
 overnight. **Do:** Use a specific version in production, keep the model name in
 one config setting, and re-run your tests before switching. Watch for
 retirement notices; old versions are eventually switched off (see *Model
-changes and retirements* in [Beyond the reel](05-beyond-the-reel.md#1-your-ai-features)).
+changes and retirements* in [Beyond the reel](06-beyond-the-reel.md#1-your-ai-features)).
 
 ---
 
@@ -139,7 +139,7 @@ often a few examples.
 - **Rules in the prompt aren't security.** "Only discuss our product" and
   "don't reveal other users' data" can be talked around. Enforce anything that
   matters in code (see *Prompt injection* in
-  [Beyond the reel](05-beyond-the-reel.md#1-your-ai-features)).
+  [Beyond the reel](06-beyond-the-reel.md#1-your-ai-features)).
 
 ### Temperature and randomness — ⚪ Later
 
@@ -173,14 +173,14 @@ of waiting for the whole thing. It usually uses Server-Sent Events.
 
 **What it means for you:** Streaming makes a 20-second answer feel fast, and it
 helps with serverless time limits (see *Serverless Limits* in
-[the reel, explained](03-the-reel-explained.md#5-operations--resilience)). Handle a
+[the reel, explained](04-the-reel-explained.md#5-operations--resilience)). Handle a
 stream that stops halfway, and record token usage when the stream finishes.
 
 ### Showing AI text safely — 🔴 Now
 
 Model output is untrusted text: render it as plain text or sanitized Markdown,
 never as raw HTML, and never run it as code or SQL (see *AI output is untrusted
-input* in [Beyond the reel](05-beyond-the-reel.md#1-your-ai-features)).
+input* in [Beyond the reel](06-beyond-the-reel.md#1-your-ai-features)).
 
 ---
 
@@ -221,6 +221,20 @@ prompt. It works in three steps:
 3. For each question, **find** the most similar chunks and send only those to
    the model with the question: "answer using these passages".
 
+```mermaid
+flowchart LR
+  subgraph Ahead of time
+    D[Documents] --> C[Split into chunks] --> E[Embeddings] --> V[(Vector search<br/>e.g. pgvector)]
+  end
+  Q[User's question] --> S[Find similar chunks<br/>the user may see]
+  V --> S
+  S --> M[Model answers<br/>from those chunks]
+  M --> A[Answer with sources]
+```
+
+*Documents are prepared once; each question pulls in only the few relevant,
+permitted passages.*
+
 **Picture it:** Instead of making the consultant read the whole library, a
 librarian brings the five most relevant pages.
 
@@ -250,6 +264,21 @@ call one, with arguments. **Your code** decides whether to run it, runs it, and
 sends the result back. An *agent* is a loop of these steps until the task is
 done. (*MCP* is a standard way to package tools so different AI apps can use
 them.)
+
+```mermaid
+sequenceDiagram
+  participant App as Your code
+  participant M as AI model
+  App->>M: User's request + list of tools
+  M-->>App: Please call create_ticket(title, priority)
+  Note over App: Check permissions as this user,<br/>validate the arguments,<br/>ask the user to confirm if risky
+  App->>App: Run create_ticket
+  App->>M: Here's the result
+  M-->>App: Final answer for the user
+```
+
+*The model only asks. Your code decides and acts, and that's where every check
+lives.*
 
 **What it means for you:**
 
@@ -345,4 +374,4 @@ JSON, required fields, length), and saves the answers to a file I can review.
 
 ---
 
-Next: [Debugging with AI: how to get unstuck](09-debugging-with-ai.md)
+Next: [Testing, for people who don't code](10-testing-for-non-coders.md)

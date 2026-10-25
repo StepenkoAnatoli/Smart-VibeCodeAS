@@ -1,7 +1,7 @@
 # Logins, done right
 
 "Use an auth provider" is the right first step (see *JWT / OAuth* in
-[the reel, explained](03-the-reel-explained.md#1-security)), but it's not the
+[the reel, explained](04-the-reel-explained.md#1-security)), but it's not the
 whole job. Providers handle passwords and tokens; your app still decides what
 happens *around* login: where users are sent afterwards, which user a request
 belongs to, what changing an email does, and who counts as an admin. Most
@@ -31,9 +31,20 @@ Every request your server handles must answer two separate questions:
 2. **Authorization: are they allowed to do *this*, to *this* record?** Decided
    by your code and your database rules.
 
+```mermaid
+flowchart LR
+  R[Request arrives] --> Q1{Who is this?<br/>Verified session}
+  Q1 -->|no valid session| X1[401: please log in]
+  Q1 -->|user A| Q2{Is user A allowed<br/>to do this to<br/>this record?}
+  Q2 -->|no| X2[403: not allowed]
+  Q2 -->|yes| OK[Do it]
+```
+
+*Two separate checks on every request: who, then whether they may.*
+
 Logins answer the first question only. Most security bugs in vibe-coded apps
 answer the first and forget the second (see *Broken Access Control* in
-[the reel, explained](03-the-reel-explained.md#1-security)).
+[the reel, explained](04-the-reel-explained.md#1-security)).
 
 ---
 
@@ -154,7 +165,7 @@ effect only after the new address is confirmed.
 
 When a user deletes their account, end all their sessions, revoke their
 tokens, cancel their subscription, and handle their data according to your
-retention rules (see [Your database, explained](06-your-database.md#5-deleting-things)).
+retention rules (see [Your database, explained](07-your-database.md#5-deleting-things)).
 
 ---
 
@@ -164,7 +175,7 @@ retention rules (see [Your database, explained](06-your-database.md#5-deleting-t
 
 A **session** is the period a user stays logged in after proving who they are.
 It's usually kept going with short-lived tokens that are refreshed
-automatically (see *JWT Rotation* in [the reel, explained](03-the-reel-explained.md#1-security)).
+automatically (see *JWT Rotation* in [the reel, explained](04-the-reel-explained.md#1-security)).
 **Do:** Pick deliberate lifetimes: long for a notes app, shorter for anything
 with money or admin power. Give users a "log out of all devices" button, and
 make sure logging out actually ends the session on the server.
@@ -245,4 +256,4 @@ changed.
 
 ---
 
-Next: [Building AI features](08-building-ai-features.md)
+Next: [Building AI features](09-building-ai-features.md)

@@ -279,7 +279,7 @@ privacy policy.
 ## Red flags: stop and ask why
 
 If you see your AI do any of these, pause and use prompt 9 above. If it's
-doing them while stuck on a bug, see [Debugging with AI](09-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it).
+doing them while stuck on a bug, see [Debugging with AI](11-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it).
 
 - Turns off Row Level Security, or sets Firebase rules to
   `allow read, write: if true`

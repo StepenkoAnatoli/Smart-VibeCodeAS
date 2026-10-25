@@ -12,6 +12,8 @@ for a long time.
 
 ## Read in this order
 
+**The basics**
+
 1. **[Start here](guide/00-start-here.md)**: how an app actually works, using a
    restaurant as the picture. Five minutes, and it makes everything else make
    sense.
@@ -20,34 +22,55 @@ for a long time.
 3. **[Vibe coding well](guide/02-vibe-coding-well.md)**: how to work with AI
    tools: specs, plans, small steps, checkpoints, what the AI can and can't
    see, rules files, and checking its work without reading every line.
-4. **[The reel, explained](guide/03-the-reel-explained.md)**: every term from
+4. **[Starting a project safely](guide/03-starting-a-project-safely.md)**: the
+   day-one setup that makes most safety items automatic: a sensible stack,
+   accounts, the repo, separate development and production, and safe defaults.
+
+**The reel, and what it left out**
+
+5. **[The reel, explained](guide/04-the-reel-explained.md)**: every term from
    the reel, each with a plain explanation, an everyday picture, and what it
    means for you.
-5. **[What you actually need](guide/04-what-you-actually-need.md)**: the honest
+6. **[What you actually need](guide/05-what-you-actually-need.md)**: the honest
    triage, what your AI tends to miss, and a learning path.
-6. **[Beyond the reel](guide/05-beyond-the-reel.md)**: what the reel left out
+7. **[Beyond the reel](guide/06-beyond-the-reel.md)**: what the reel left out
    about launching and running an app: securing AI features, taking payments,
-   legal basics, testing, launch day, maintenance after launch, and what
-   changes if you sell to teams or ship a mobile app.
-7. **[Your database, explained](guide/06-your-database.md)**: tables and how
-   they connect, storing money and time correctly, constraints, deleting, and
-   changing live data safely.
-8. **[Logins, done right](guide/07-logins-done-right.md)**: what your auth
+   legal basics, testing, launch day, notifications, maintenance after launch,
+   and what changes if you sell to teams or ship a mobile app.
+
+**Building it right**
+
+8. **[Your database, explained](guide/07-your-database.md)**: tables and how
+   they connect, storing money and time correctly, constraints, deleting,
+   search, and changing live data safely.
+9. **[Logins, done right](guide/08-logins-done-right.md)**: what your auth
    provider doesn't handle for you: trusting the right user ID, roles,
    redirects, email changes, sessions and two-factor login.
-9. **[Building AI features](guide/08-building-ai-features.md)**: tokens and
-   cost, choosing models, prompts in your app, structured output, streaming,
-   memory, answering from your own data (RAG), tools and agents, outages, and
-   testing AI output.
-10. **[Debugging with AI](guide/09-debugging-with-ai.md)**: how to read an
+10. **[Building AI features](guide/09-building-ai-features.md)**: tokens and
+    cost, choosing models, prompts in your app, structured output, streaming,
+    memory, answering from your own data (RAG), tools and agents, outages, and
+    testing AI output.
+11. **[Testing, for people who don't code](guide/10-testing-for-non-coders.md)**:
+    what tests are, which ones matter, reading results, running them on every
+    change, and the traps when the AI writes them.
+
+**When it breaks**
+
+12. **[Debugging with AI](guide/11-debugging-with-ai.md)**: how to read an
     error, find where it really happened, give your AI the right clues, and
     escape the loop where every "fix" brings a new error.
-11. **[How vibe-coded apps break](guide/10-how-vibe-coded-apps-break.md)**: 19
+13. **[How vibe-coded apps break](guide/12-how-vibe-coded-apps-break.md)**: 19
     common disaster stories, why the AI wrote the code that caused each one,
     and how to prevent it.
-12. **[Rescuing a messy AI-built project](guide/11-rescuing-a-messy-project.md)**:
+14. **[When things go wrong](guide/13-when-things-go-wrong.md)**: an incident
+    playbook for leaked keys, exploding bills, data exposure, outages, lost
+    data and taken-over accounts, plus how to tell users.
+15. **[Rescuing a messy AI-built project](guide/14-rescuing-a-messy-project.md)**:
     getting back in control of an app nobody understands anymore, step by step.
-13. **[Checklist and AI prompts](guide/12-checklist-and-ai-prompts.md)**: a
+
+**Before you launch**
+
+16. **[Checklist and AI prompts](guide/15-checklist-and-ai-prompts.md)**: a
     pre-launch checklist and copy-paste prompts that make your AI check these
     things for you.
 
@@ -55,7 +78,7 @@ for a long time.
 
 The whole guide is also one phone-friendly page, with search, Now/Soon/Later
 filters, copy buttons on every prompt, a checklist that remembers your ticks,
-and a **quiz** on the essentials (43 questions, each linked to its
+and a **quiz** on the essentials (55 questions, each linked to its
 explanation).
 
 - `docs/index.html` is that page as a website. To publish it for free with

@@ -18,7 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = [ROOT / "README.md", *sorted((ROOT / "guide").glob("*.md"))]
-GLOSSARY = ROOT / "guide" / "03-the-reel-explained.md"
+GLOSSARY = ROOT / "guide" / "04-the-reel-explained.md"
 QUIZ = ROOT / "quiz" / "questions.json"
 
 # The 111 terms from the original @nataindata list, in order.

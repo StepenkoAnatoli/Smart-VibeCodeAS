@@ -191,7 +191,7 @@ fix.
   (`Authorization`) and content type.
 - **Query string:** the part of a URL after `?`: `/search?q=shoes&page=2`.
 - **Status code:** the number saying how a request went (200 OK, 404 not found,
-  500 server crashed). See the table in [Debugging with AI](09-debugging-with-ai.md#2-reading-an-error-message).
+  500 server crashed). See the table in [Debugging with AI](11-debugging-with-ai.md#2-reading-an-error-message).
 - **REST:** the most common style of API, built from URLs and HTTP methods.
   GraphQL and gRPC are other styles.
 - **SDK:** a ready-made package for using someone's API from your code, like

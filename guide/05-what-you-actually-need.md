@@ -51,7 +51,7 @@ matter more than most of what's on it.
    Ask your AI to validate every input with Zod or Pydantic.
 
 7. **SQL injection and XSS**: the two classic attacks.
-   Know the red flags (see the [checklist](12-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
+   Know the red flags (see the [checklist](15-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why))
    and ask your AI to check for them.
 
 8. **HTTPS**: already on with modern hosts. Just never turn it off.
@@ -72,7 +72,7 @@ matter more than most of what's on it.
 The reel also leaves out whole areas a launch depends on: securing your AI
 features (prompt injection), testing, payments, privacy law, free-tier limits
 on launch day, and maintenance afterwards. Those are in
-[Beyond the reel](05-beyond-the-reel.md).
+[Beyond the reel](06-beyond-the-reel.md).
 
 Do these 12 and you've covered the disasters that most often hit vibe-coded
 apps: leaked keys, open databases, surprise bills and lost data.
@@ -82,7 +82,7 @@ apps: leaked keys, open databases, surprise bills and lost data.
 ## Tier 2: once real people are using it
 
 Learn these as you go. Each one is explained in
-[the reel, explained](03-the-reel-explained.md).
+[the reel, explained](04-the-reel-explained.md).
 
 - **Seeing what's happening:** logging, metrics, error tracking (Sentry),
   monitoring, an uptime monitor with a health check, alerts, observability.
@@ -151,8 +151,8 @@ volunteers the rest.
 
 The fix is cheap: know the words, then ask. [Vibe coding well](02-vibe-coding-well.md)
 covers the working habits that stop most of these problems before they start,
-[How vibe-coded apps break](10-how-vibe-coded-apps-break.md) shows what happens
-when they're missing, and the [checklist and copy-paste prompts](12-checklist-and-ai-prompts.md)
+[How vibe-coded apps break](12-how-vibe-coded-apps-break.md) shows what happens
+when they're missing, and the [checklist and copy-paste prompts](15-checklist-and-ai-prompts.md)
 check for them.
 
 ---
@@ -170,10 +170,10 @@ Go one step at a time, and practice each step on a tiny app of your own.
    and the terminal.
 3. **Working with AI:** [Vibe coding well](02-vibe-coding-well.md). Write a
    spec and a rules file for your next project before any code.
-4. **Logins and permissions:** read [Logins, done right](07-logins-done-right.md),
+4. **Logins and permissions:** read [Logins, done right](08-logins-done-right.md),
    build a tiny app with login, then work through its test list: prove that
    user A can't see user B's data.
-5. **Databases:** [Your database, explained](06-your-database.md), then basic
+5. **Databases:** [Your database, explained](07-your-database.md), then basic
    SQL, and doing one real backup *and restore*.
 6. **Security basics:** read the [OWASP Top 10](https://top10.owasp.org/2025/en/),
    then try the free hands-on labs at
@@ -181,7 +181,7 @@ Go one step at a time, and practice each step on a tiny app of your own.
    (start with SQL injection and XSS).
 7. **Running it for real:** error tracking, an uptime monitor, a billing
    alert, and rolling back a deploy on purpose so you know how.
-8. **If your app uses AI:** [Building AI features](08-building-ai-features.md),
+8. **If your app uses AI:** [Building AI features](09-building-ai-features.md),
    especially tokens and cost, and testing AI output.
 9. **After that:** pick Tier 2 items as you run into them, and take the quiz
    on the one-page version of this guide to check what stuck.
@@ -196,4 +196,4 @@ Then quiz me with 3 questions.
 
 ---
 
-Next: [Beyond the reel: launching and running your app](05-beyond-the-reel.md)
+Next: [Beyond the reel: launching and running your app](06-beyond-the-reel.md)

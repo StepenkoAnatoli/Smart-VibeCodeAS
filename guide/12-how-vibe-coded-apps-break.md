@@ -35,7 +35,7 @@ publicly.
 
 **Prevent it:** Paid API calls go through your own backend, the key lives only
 in server-side environment variables, and every paid endpoint has a rate limit.
-See *Secrets Management* in [the reel, explained](03-the-reel-explained.md#1-security).
+See *Secrets Management* in [the reel, explained](04-the-reel-explained.md#1-security).
 
 ### The database anyone can read — 🔴 Now
 
@@ -50,7 +50,7 @@ development, and turning them off makes the errors disappear.
 **Prevent it:** Row Level Security on for every table, with policies that check
 the row belongs to the logged-in user (an "allow everyone" policy puts the hole
 right back). Then test it by trying to read another user's data. See *Broken Access Control*
-in [the reel, explained](03-the-reel-explained.md#1-security).
+in [the reel, explained](04-the-reel-explained.md#1-security).
 
 ### The admin button that was only hidden — 🔴 Now
 
@@ -62,7 +62,7 @@ anything, so anyone who finds the URL, or edits the request, can call them.
 matters happens on the server, where you don't look.
 
 **Prevent it:** Every admin action checks the user's role **on the server**.
-See *Admin powers and audit logs* in [Beyond the reel](05-beyond-the-reel.md#2-accounts-and-users).
+See *Admin powers and audit logs* in [Beyond the reel](06-beyond-the-reel.md#2-accounts-and-users).
 
 ### Change one number, see someone else's data — 🔴 Now
 
@@ -75,7 +75,7 @@ check the owner" is an extra step it skips unless asked.
 
 **Prevent it:** Every query for private data filters by the logged-in user (or
 their organization). Random IDs make guessing harder but don't replace the
-check. See [Your database, explained](06-your-database.md#2-how-tables-connect).
+check. See [Your database, explained](07-your-database.md#2-how-tables-connect).
 
 ### The uploads anyone could open — 🔴 Now
 
@@ -88,7 +88,7 @@ signed URLs to manage.
 
 **Prevent it:** Private files go in private buckets, served through
 short-lived signed URLs, after checking that the user may see them. See *File
-uploads, done safely* in [Beyond the reel](05-beyond-the-reel.md#4-security-the-reel-skipped).
+uploads, done safely* in [Beyond the reel](06-beyond-the-reel.md#4-security-the-reel-skipped).
 
 ### The key that stayed in Git history — 🔴 Now
 
@@ -117,7 +117,7 @@ same as real.
 
 **Prevent it:** Before installing anything unfamiliar, check that it exists,
 has real usage and is the official one. See *Dependency Hell* in
-[the reel, explained](03-the-reel-explained.md#7-infrastructure--build-tools).
+[the reel, explained](04-the-reel-explained.md#7-infrastructure--build-tools).
 
 ### The AI assistant that took someone else's orders — 🔴 Now
 
@@ -131,7 +131,7 @@ apart from text they're reading.
 
 **Prevent it:** Give the AI only the permissions the user has, check them in
 code, and require confirmation for risky actions. See *Prompt injection* in
-[Beyond the reel](05-beyond-the-reel.md#1-your-ai-features).
+[Beyond the reel](06-beyond-the-reel.md#1-your-ai-features).
 
 ### The fix that removed the lock — 🔴 Now
 
@@ -143,7 +143,7 @@ protection.
 **Why the AI does it:** It's optimizing for "make the error go away".
 
 **Prevent it:** Use the guard prompt in the
-[checklist](12-checklist-and-ai-prompts.md#9-the-guard-paste-this-whenever-your-ai-proposes-a-fix),
+[checklist](15-checklist-and-ai-prompts.md#9-the-guard-paste-this-whenever-your-ai-proposes-a-fix),
 and the "Never" rules in your rules file (see [Vibe coding well](02-vibe-coding-well.md#3-what-your-ai-can-and-cant-see)).
 
 ---
@@ -174,7 +174,7 @@ redirect never get upgraded.
 
 **Prevent it:** Access changes only when your server receives a **verified
 webhook** from the payment provider. See *Webhooks* in
-[the reel, explained](03-the-reel-explained.md#6-performance-metrics--networking).
+[the reel, explained](04-the-reel-explained.md#6-performance-metrics--networking).
 
 ### Charged twice — 🔴 Now
 
@@ -187,7 +187,7 @@ only happen in the real world.
 
 **Prevent it:** Disable the button after the first click, use idempotency keys,
 and record processed webhook event IDs so repeats are skipped. See
-*Idempotency* in [the reel, explained](03-the-reel-explained.md#3-core-infrastructure--architecture).
+*Idempotency* in [the reel, explained](04-the-reel-explained.md#3-core-infrastructure--architecture).
 
 ### The bill that grew overnight — 🔴 Now
 
@@ -202,7 +202,7 @@ look fine in a quick test.
 **Prevent it:** Rate limits and per-user quotas on every paid endpoint,
 a maximum output length on AI calls, billing alerts on every provider, and
 hard spending caps wherever a provider offers them (a Google Cloud or AWS
-"budget" only sends alerts). See *Cost Optimization* in [the reel, explained](03-the-reel-explained.md#5-operations--resilience).
+"budget" only sends alerts). See *Cost Optimization* in [the reel, explained](04-the-reel-explained.md#5-operations--resilience).
 
 ---
 
@@ -220,7 +220,7 @@ development database, and the agent had production credentials in reach.
 **Prevent it:** Separate development and production databases, no production
 credentials on your laptop or in the agent's reach, backups that you've tested
 restoring, and never auto-approving destructive commands. See *Backups* in
-[the reel, explained](03-the-reel-explained.md#5-operations--resilience).
+[the reel, explained](04-the-reel-explained.md#5-operations--resilience).
 
 ### The migration that ate a column — 🔴 Now
 
@@ -231,7 +231,7 @@ column and adds a new, empty one. Every user's data in that column is gone.
 
 **Prevent it:** Read every migration for `DROP`, back up before running it on
 production, and use the expand-and-contract pattern for live columns. See
-[Your database, explained](06-your-database.md#6-habits-that-save-you-later).
+[Your database, explained](07-your-database.md#6-habits-that-save-you-later).
 
 ### Everyone saw the same account page — 🔴 Now
 
@@ -244,7 +244,7 @@ didn't *look* personal in the code.
 
 **Prevent it:** Mark personal responses `Cache-Control: private` or `no-store`,
 and only cache pages that are identical for every visitor. See *Edge Caching*
-in [the reel, explained](03-the-reel-explained.md#3-core-infrastructure--architecture).
+in [the reel, explained](04-the-reel-explained.md#3-core-infrastructure--architecture).
 
 ---
 
@@ -273,7 +273,7 @@ see them.
 
 **Prevent it:** List every service's limits before launch, and upgrade or
 raise limits ahead of a big day. See *Launch day* in
-[Beyond the reel](05-beyond-the-reel.md#8-launch-day).
+[Beyond the reel](06-beyond-the-reel.md#8-launch-day).
 
 ### The domain that expired — 🔴 Now
 
@@ -284,7 +284,7 @@ down, and sometimes someone else buys the domain.
 **Why the AI does it:** It doesn't; nobody was watching it.
 
 **Prevent it:** Auto-renew on, a current card, renewal reminders, and 2FA on
-the registrar. See *Your own accounts* in [Beyond the reel](05-beyond-the-reel.md#4-security-the-reel-skipped).
+the registrar. See *Your own accounts* in [Beyond the reel](06-beyond-the-reel.md#4-security-the-reel-skipped).
 
 ---
 
@@ -315,4 +315,4 @@ Then list the fixes in order of how badly each could hurt me.
 
 ---
 
-Next: [Rescuing a messy AI-built project](11-rescuing-a-messy-project.md)
+Next: [When things go wrong: an incident playbook](13-when-things-go-wrong.md)

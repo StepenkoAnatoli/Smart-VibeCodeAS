@@ -37,31 +37,26 @@ This one fact explains a lot of the reel:
 
 ## What happens when someone opens your app
 
+```mermaid
+sequenceDiagram
+  participant You as You (browser)
+  participant DNS
+  participant Server as Your server (backend)
+  participant DB as Database
+  You->>DNS: 1. Where is myapp.com?
+  DNS-->>You: Its number address (IP)
+  You->>Server: 2. Connect over HTTPS (encrypted)
+  Server-->>You: 3. The page and its JavaScript (the frontend)
+  You->>Server: 4. You tap My orders, and the frontend asks the API
+  Note over Server: 5. Who are you? Are you allowed to see this?
+  Server->>DB: 6. Get this user's orders
+  DB-->>Server: The orders
+  Server-->>You: 7. The answer comes back and the page shows it
 ```
- You type myapp.com
-        |
-        v
- 1. DNS turns "myapp.com" into the server's number address    <- DNS
-        |
-        v
- 2. Browser connects over HTTPS (encrypted)                   <- TLS/SSL
-        |
-        v
- 3. Server sends the frontend (the page and its JavaScript)
-        |
-        v
- 4. You tap "My orders": the frontend calls the API           <- request
-        |
-        v
- 5. Backend checks: who are you? are you allowed to see this? <- authentication + authorization
-        |
-        v
- 6. Backend asks the database for your orders                 <- query
-        |
-        v
- 7. The answer travels back and the page shows it             <- response
-                                                                 (time taken = latency)
-```
+
+*The reel's words for each step: 1 is **DNS**, 2 is **TLS/SSL**, 4 is a
+**request**, 5 is **authentication** and **authorization**, 6 is a **query**,
+7 is the **response**, and the time the whole trip takes is **latency**.*
 
 Nearly every term in the reel is about one of these steps going wrong, being
 slow, being attacked, or having to handle a million people at once.
