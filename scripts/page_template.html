@@ -132,6 +132,12 @@ h1, h2, h3, h4 { text-wrap: balance; scroll-margin-top: calc(var(--hdr) + 0.75re
   padding: 0.4rem 0.6rem; cursor: pointer;
 }
 .table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+.diagram {
+  margin: 0 0 0.5rem; padding: 1rem; overflow-x: auto; text-align: center;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+}
+.diagram svg { max-width: 100%; height: auto; }
+.diagram pre { text-align: left; margin: 0; padding: 0; background: none; }
 .chapter table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 .chapter th, .chapter td { text-align: left; vertical-align: top; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
 .chapter th { font-weight: 700; white-space: nowrap; }
@@ -266,6 +272,19 @@ body.quiz-on #guide, body.quiz-on #empty { display: none; }
     section.id = ch.id;
     section.innerHTML = marked.parse(ch.md);
 
+    // Diagrams: keep each Mermaid source in a box; it's drawn once the library loads.
+    section.querySelectorAll("pre > code.language-mermaid").forEach((code) => {
+      const box = document.createElement("div");
+      box.className = "diagram";
+      box.setAttribute("role", "img");
+      box.setAttribute("aria-label", "Diagram");
+      box.dataset.src = code.textContent;
+      const fallback = document.createElement("pre");
+      fallback.textContent = code.textContent;
+      box.append(fallback);
+      code.parentElement.replaceWith(box);
+    });
+
     // Heading anchors, matching GitHub's scheme, prefixed by chapter.
     const seen = {};
     section.querySelectorAll("h1, h2, h3, h4").forEach((h) => {
@@ -347,6 +366,25 @@ body.quiz-on #guide, body.quiz-on #empty { display: none; }
     }
     meta.append(pill);
     b.el.insertBefore(meta, h);
+  }
+
+  // Draw diagrams after the page is up; if the library can't load, the source text stays.
+  const diagrams = [...guide.querySelectorAll(".diagram")];
+  if (diagrams.length) {
+    const lib = document.createElement("script");
+    lib.src = "https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js";
+    lib.onload = async () => {
+      const root = document.documentElement.dataset.theme;
+      const dark = root === "dark" || (root !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "default", securityLevel: "strict" });
+      for (let i = 0; i < diagrams.length; i++) {
+        try {
+          const { svg } = await mermaid.render("diagram-" + i, diagrams[i].dataset.src);
+          diagrams[i].innerHTML = svg;
+        } catch (e) { /* keep the readable source text */ }
+      }
+    };
+    document.body.append(lib);
   }
 
   // Tables scroll on their own; outside links open in a new tab.

@@ -17,7 +17,8 @@ Labels as elsewhere: 🔴 **Now** (before you have real data), 🟡 **Soon**,
 4. [Rules the database enforces for you](#4-rules-the-database-enforces-for-you)
 5. [Deleting things](#5-deleting-things)
 6. [Habits that save you later](#6-habits-that-save-you-later)
-7. [Copy-paste database prompts](#7-copy-paste-database-prompts)
+7. [Search](#7-search)
+8. [Copy-paste database prompts](#8-copy-paste-database-prompts)
 
 ---
 
@@ -173,7 +174,7 @@ requests can't both succeed if the second insert violates a unique rule.
 
 ### Indexes on the columns you search — 🟡 Soon
 
-Covered in *Database Indexing* in [the reel, explained](03-the-reel-explained.md#2-databases--performance).
+Covered in *Database Indexing* in [the reel, explained](04-the-reel-explained.md#2-databases--performance).
 In short: add an index for every foreign key and every column you filter or
 sort by.
 
@@ -211,7 +212,7 @@ you're legally required to keep. Ask which rule each foreign key uses.
 Change the database's structure only through migrations that are saved in Git,
 never by clicking around in the production dashboard. Read each migration
 before it runs on production, and back up first. (See *Database Migrations* in
-[the reel, explained](03-the-reel-explained.md#2-databases--performance).)
+[the reel, explained](04-the-reel-explained.md#2-databases--performance).)
 
 ### Changing a column that has data — 🟡 Soon
 
@@ -238,7 +239,38 @@ early warnings of bugs that the app's screens hide.
 
 ---
 
-## 7. Copy-paste database prompts
+## 7. Search
+
+### Letting users search — 🟡 Soon
+
+**What it is:** A search box over your app's content: products, notes,
+messages, help articles.
+
+**The usual mistakes:**
+
+- **The slow version.** AI often writes search as "find rows where the text
+  contains this word" (`ILIKE '%word%'` in SQL). It works on a few hundred
+  rows, then gets slow, because the database has to read every row, and it
+  can't rank results or handle typos and word endings ("run" vs "running").
+- **The leaky version.** Search results skip the permission checks that the
+  rest of the app does, so searching shows titles or snippets of other users'
+  private data. Search must filter by owner like every other query.
+
+**Do:**
+
+- For most small apps, Postgres's built-in **full-text search** (available in
+  Supabase) with an index is enough: it's fast, ranks results and handles word
+  endings. The `pg_trgm` extension adds typo-tolerant matching.
+- For large catalogs or instant search-as-you-type, dedicated services such as
+  Algolia, Meilisearch or Typesense do more. They hold a **copy** of your data,
+  so keep it in sync, and only send them what each user is allowed to find.
+- To search by *meaning* ("cheap flights" finding "budget airfare"), use
+  embeddings (see *Retrieval-augmented generation* in
+  [Building AI features](09-building-ai-features.md#7-answering-from-your-own-data-rag)).
+
+---
+
+## 8. Copy-paste database prompts
 
 ### Design before building
 
@@ -275,4 +307,4 @@ later migration. Show each migration and the order of deploys.
 
 ---
 
-Next: [Logins, done right](07-logins-done-right.md)
+Next: [Logins, done right](08-logins-done-right.md)

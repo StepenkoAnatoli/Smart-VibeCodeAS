@@ -72,7 +72,7 @@ workspace, you don't control it yet.
 3. Make a `.env.example` listing every setting the app needs, without the
    secret values.
 4. Get a **separate development database** with fake data (see *Test data and
-   seed scripts* in [Your database, explained](06-your-database.md#6-habits-that-save-you-later)).
+   seed scripts* in [Your database, explained](07-your-database.md#6-habits-that-save-you-later)).
 5. Confirm the production build works (`npm run build`) and that deploying
    from GitHub produces the same app that's live.
 
@@ -117,7 +117,7 @@ order:
 5. **Abuse and cost:** rate limits and quotas on login and on anything that
    costs money.
 
-The all-in-one prompt in [How vibe-coded apps break](10-how-vibe-coded-apps-break.md#ask-your-ai-to-check-for-all-of-these)
+The all-in-one prompt in [How vibe-coded apps break](12-how-vibe-coded-apps-break.md#ask-your-ai-to-check-for-all-of-these)
 checks for all 19 common failures at once. Fix one problem per change, and test
 each fix.
 
@@ -132,7 +132,7 @@ accident.
 
 Start with end-to-end tests of the money paths: sign-up, login, the core
 feature and payment (see *Testing the paths that matter* in
-[Beyond the reel](05-beyond-the-reel.md#3-does-it-actually-work)). Run them in CI
+[Beyond the reel](06-beyond-the-reel.md#3-does-it-actually-work)). Run them in CI
 on every change. From now on, a change that breaks a test doesn't get merged.
 
 ---
@@ -258,4 +258,4 @@ works. Don't start yet.
 
 ---
 
-Next: [Pre-launch checklist and copy-paste AI prompts](12-checklist-and-ai-prompts.md)
+Next: [Pre-launch checklist and copy-paste AI prompts](15-checklist-and-ai-prompts.md)

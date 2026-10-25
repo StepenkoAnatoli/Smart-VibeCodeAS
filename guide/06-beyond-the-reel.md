@@ -46,7 +46,7 @@ you *which questions to look up* for where you and your users live.
 If your app sends anything to an AI model, there's a whole category of risk
 the reel never mentions. The industry has its own list for it, the
 [OWASP Top 10 for LLM Applications](https://genai.owasp.org/llm-top-10/).
-This section covers the risks; [Building AI features](08-building-ai-features.md)
+This section covers the risks; [Building AI features](09-building-ai-features.md)
 covers how these features work, what they cost, and how to test them.
 
 ### Prompt injection — 🔴 Now
@@ -402,6 +402,24 @@ from your own domain, with SPF, DKIM and DMARC set up (see *DNS*). Keep
 *transactional* email (receipts, password resets) separate from *marketing*
 email, and give marketing emails an unsubscribe link, which many laws require.
 
+### Notifications: email, push and in-app — 🟡 Soon
+
+Most apps end up telling users things: "your report is ready", "someone
+replied", "your trial ends tomorrow". **Do:**
+
+- Decide which channel fits each message: **in-app** (a bell icon, shown next
+  time they visit), **email**, or **push** (a phone or browser pop-up).
+- Let users choose what they get, and honor it. Too many notifications and
+  people switch them all off, or mark your emails as spam, which hurts delivery
+  for everyone.
+- Group frequent events into a digest instead of one message per event.
+- Send them from a background job, not in the middle of a user's request, and
+  make sure a retry can't send the same message twice.
+- **Web push** needs the user's permission and a *service worker* (a small
+  background script in the browser). On iPhone it only works for web apps the
+  user has added to their Home Screen. Native apps use Apple's and Google's push
+  services (see *Push notifications* in Part C).
+
 ---
 
 ## 8. Launch day
@@ -609,4 +627,4 @@ Crashlytics), because users rarely report crashes; they just delete the app.
 
 ---
 
-Next: [Your database, explained](06-your-database.md)
+Next: [Your database, explained](07-your-database.md)

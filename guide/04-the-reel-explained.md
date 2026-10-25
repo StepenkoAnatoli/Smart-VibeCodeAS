@@ -1021,6 +1021,24 @@ succeeded", "subscription cancelled", "new commit pushed".
 **Picture it:** The buzzer a café gives you that vibrates when your order is
 ready, instead of you asking at the counter every minute.
 
+```mermaid
+sequenceDiagram
+  participant U as User's browser
+  participant A as Your app (server)
+  participant S as Stripe
+  U->>A: Click Upgrade
+  A->>S: Create a checkout session (price from your server)
+  S-->>U: Stripe's payment page
+  U->>S: Pays
+  S-->>U: Redirect back to your success page (just a thank-you)
+  S->>A: Webhook: payment succeeded
+  Note over A: Verify the signature, skip duplicates
+  A->>A: Upgrade the account in the database
+```
+
+*The success page is only a thank-you. The verified webhook is what unlocks
+paid access.*
+
 **What it means for you:**
 
 - **Verify the signature** on every webhook (Stripe and others sign them).
@@ -1183,4 +1201,4 @@ know the word.
 
 ---
 
-Next: [What you actually need, and in what order](04-what-you-actually-need.md)
+Next: [What you actually need, and in what order](05-what-you-actually-need.md)

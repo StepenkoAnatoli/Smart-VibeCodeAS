@@ -12,7 +12,7 @@ are missing. Every suggestion, correction and question helps.
 - **Know a term or topic that's missing?** [Suggest it](../../issues/new?template=suggest-a-topic.yml).
 - **Something went wrong in your vibe-coded app** that isn't covered yet? Tell
   us the story in an issue. Real stories become entries in
-  [How vibe-coded apps break](guide/10-how-vibe-coded-apps-break.md).
+  [How vibe-coded apps break](guide/12-how-vibe-coded-apps-break.md).
 
 You don't need to know Git or Markdown for any of these.
 
@@ -81,6 +81,6 @@ of this.
 
 ### Adding a chapter
 
-Name it with the next number (`13-something.md`), add a short menu label for
+Name it with the next number (`16-something.md`), add a short menu label for
 it in `NAV_LABELS` in `scripts/build_page.py`, add it to the reading order in
 the README, and link it from the previous chapter's "Next" line.

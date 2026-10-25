@@ -43,7 +43,7 @@ it. A useful spec answers:
 - **The main flow,** step by step: "sign up → create a project → invite a
   teammate → ...".
 - **The data:** what things exist (users, projects, invoices) and how they
-  relate. See [Your database, explained](06-your-database.md).
+  relate. See [Your database, explained](07-your-database.md).
 - **Who can see what:** which data is private, shared with a team, or public.
 - **Money:** free, paid, what's limited on which plan.
 - **Not now:** the features you're deliberately leaving out.
@@ -80,6 +80,19 @@ steps keep each change understandable and each mistake cheap.
 
 **Do:** After each step, run the app and click through it yourself. Then
 commit. Then take the next step.
+
+```mermaid
+flowchart LR
+  A[Plan one small step] --> B[AI builds it]
+  B --> C[Check the change<br/>and click through it]
+  C -->|works| D[Commit]
+  D --> A
+  C -->|broken| E[Undo to the<br/>last commit]
+  E --> A
+```
+
+*The loop: one small step, check it, commit. When a step goes wrong, you lose
+minutes, not days.*
 
 ### Commit as a checkpoint — 🔴 Now
 
@@ -197,7 +210,7 @@ For each change, check:
 2. **The size.** A tiny request shouldn't produce a huge change.
 3. **What was removed.** Deleted checks, tests and error handling are the
    dangerous changes.
-4. **The red flags** in the [checklist](12-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why).
+4. **The red flags** in the [checklist](15-checklist-and-ai-prompts.md#red-flags-stop-and-ask-why).
 
 Then ask the AI to explain the change in plain words, and to list anything it
 assumed or didn't do.
@@ -223,7 +236,7 @@ Automated tests are how you know the AI's newest change didn't break last
 week's feature. They're also feedback the AI can use: with tests in place, it
 can run them and fix its own mistakes before you ever see them. Ask for tests
 for the important flows (see *Testing the paths that matter* in
-[Beyond the reel](05-beyond-the-reel.md#3-does-it-actually-work)), and add the
+[Beyond the reel](06-beyond-the-reel.md#3-does-it-actually-work)), and add the
 rule "run the tests before saying it's done" to your rules file.
 
 ### A second opinion from a fresh conversation — 🟡 Soon
@@ -253,7 +266,7 @@ logic copied in several places, and three different ways of fetching data all
 make the AI more likely to change the wrong copy or invent a fourth way. Ask
 it to keep files focused, reuse existing helpers, and follow patterns already in
 the project. Every few weeks, ask it to find duplication and dead code (see
-*Technical debt* in [Beyond the reel](05-beyond-the-reel.md#10-keeping-the-codebase-healthy)).
+*Technical debt* in [Beyond the reel](06-beyond-the-reel.md#10-keeping-the-codebase-healthy)).
 
 ### Write things down — 🟡 Soon
 
@@ -295,14 +308,14 @@ logins (often Supabase), so you can keep them when you move.
 Check that you can take your code, your database and your users' accounts
 elsewhere if a tool shuts down, changes its prices, or you outgrow it. Your
 domain, GitHub, database and payment accounts should all be in your name (see
-*Your own accounts* in [Beyond the reel](05-beyond-the-reel.md#4-security-the-reel-skipped)).
+*Your own accounts* in [Beyond the reel](06-beyond-the-reel.md#4-security-the-reel-skipped)).
 
 ### Know what your AI tool costs — ⚪ Later
 
 AI tools charge by usage in different ways: messages, credits or tokens. Long
 conversations and big files use more, and an agent left running loops can burn
 through a month's allowance. Check your plan's limits, and stop runs that are
-going in circles (see [Debugging with AI](09-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it)).
+going in circles (see [Debugging with AI](11-debugging-with-ai.md#8-the-ai-loop-and-how-to-escape-it)).
 
 ---
 
@@ -400,4 +413,4 @@ secrets, no disabling checks). Keep it under 60 lines.
 
 ---
 
-Next: [The reel, explained, term by term](03-the-reel-explained.md)
+Next: [Starting a project safely: the day-one setup](03-starting-a-project-safely.md)

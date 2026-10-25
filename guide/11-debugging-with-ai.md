@@ -369,4 +369,4 @@ symptom or fixing the cause?
 
 ---
 
-Next: [How vibe-coded apps break: the common stories](10-how-vibe-coded-apps-break.md)
+Next: [How vibe-coded apps break: the common stories](12-how-vibe-coded-apps-break.md)
