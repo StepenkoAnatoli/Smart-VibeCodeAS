@@ -81,6 +81,6 @@ of this.
 
 ### Adding a chapter
 
-Name it with the next number (`16-something.md`), add a short menu label for
+Name it with the next number (`18-something.md`), add a short menu label for
 it in `NAV_LABELS` in `scripts/build_page.py`, add it to the reading order in
 the README, and link it from the previous chapter's "Next" line.

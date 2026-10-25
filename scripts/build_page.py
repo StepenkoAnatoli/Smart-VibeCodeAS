@@ -40,8 +40,9 @@ img { max-width: 100%; }
 </style>
 """
 BODY_START = '<div class="wrap" id="top">'
-# The chapter whose checkboxes the page remembers, found by name so renumbering can't break it.
+# Chapters whose checkboxes the page remembers, found by name so renumbering can't break them.
 CHECKLIST = next(GUIDE.glob("*-checklist-and-ai-prompts.md"))
+PRACTICE = next(GUIDE.glob("*-practice-project.md"))
 
 # Short names for the chapter menu, by file-name prefix.
 NAV_LABELS = {
@@ -61,6 +62,8 @@ NAV_LABELS = {
     "13": "When things go wrong",
     "14": "Rescuing a project",
     "15": "Checklist",
+    "16": "Practice project",
+    "17": "Working with a developer",
 }
 
 LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
@@ -119,6 +122,7 @@ def build():
         "numbers": numbers,
         "glossary": ids_by_file[GLOSSARY.name],
         "checklist": ids_by_file[CHECKLIST.name],
+        "practice": ids_by_file[PRACTICE.name],
         "quiz": quiz,
     }, ensure_ascii=False)
     # Keep the embedded JSON from closing its <script> tag early.

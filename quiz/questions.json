@@ -720,5 +720,44 @@
     "why": "Search is just another query. If it skips permission checks, it leaks other users' data in titles and snippets.",
     "file": "07-your-database.md",
     "heading": "Letting users search"
+  },
+  {
+    "id": "dev-access",
+    "q": "A freelance developer needs to work on your app. How should they get access?",
+    "options": [
+      "Share your GitHub and hosting passwords with them",
+      "Invite them with their own accounts and the smallest role that does the job",
+      "Give them the production database password so they can work fast"
+    ],
+    "answer": 1,
+    "why": "Their own accounts can be limited and removed later; your password can't. Start with development access and test keys.",
+    "file": "17-working-with-a-developer.md",
+    "heading": "Their own access, as little as needed"
+  },
+  {
+    "id": "dev-ownership",
+    "q": "What should a written agreement with a developer make clear?",
+    "options": [
+      "That you own the code they write, and that the accounts stay in your name",
+      "That they can host the app on their own account",
+      "Nothing, a chat message is enough"
+    ],
+    "answer": 0,
+    "why": "Make sure the code and every account (domain, hosting, database, payments) stay yours.",
+    "file": "17-working-with-a-developer.md",
+    "heading": "Understand what you're agreeing to"
+  },
+  {
+    "id": "dev-offboarding",
+    "q": "A developer's work has finished. What should you do the same day?",
+    "options": [
+      "Nothing, they might come back",
+      "Remove their access everywhere and replace any secret they could see",
+      "Only change your own password"
+    ],
+    "answer": 1,
+    "why": "It's routine hygiene, not distrust. Remove access, rotate secrets, and make sure everything is merged and documented.",
+    "file": "17-working-with-a-developer.md",
+    "heading": "Offboarding"
   }
 ]

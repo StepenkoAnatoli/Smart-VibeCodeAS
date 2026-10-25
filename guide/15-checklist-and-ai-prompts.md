@@ -304,4 +304,4 @@ doing them while stuck on a bug, see [Debugging with AI](11-debugging-with-ai.md
 
 ---
 
-Back to the [start](../README.md)
+Next: [Practice project: build a small app the safe way](16-practice-project.md)

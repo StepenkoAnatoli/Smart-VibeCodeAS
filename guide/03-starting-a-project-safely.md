@@ -130,6 +130,11 @@ From the very first table:
 
 - Row Level Security **on**, with a policy that checks the row belongs to the
   logged-in user (or their organization). Never "allow everyone".
+- **Explicit grants** on Supabase: new projects no longer let the API reach new
+  tables automatically, so each table needs a `grant` to the `authenticated`
+  role (and to `anon` only if logged-out visitors should see it). If you see
+  "permission denied for table", the fix is the grant, never turning off Row
+  Level Security.
 - An owner column (`user_id`, or `org_id` for team apps) on every table of
   private data.
 - Money as integer cents, times as `timestamptz` in UTC, and `created_at` and
@@ -190,8 +195,8 @@ Vercel, Stripe, Zod, Tailwind]. Before writing features:
    check login and ownership in every route and server action, RLS policies
    on every table, secrets only on the server, money as integer cents, times
    as UTC).
-3. Database migrations in the repo, with Row Level Security on and an owner
-   policy for every table.
+3. Database migrations in the repo, with Row Level Security on, an owner
+   policy, and explicit grants to the authenticated role for every table.
 4. A GitHub Actions workflow that runs build, lint and tests on every pull
    request.
 5. Separate settings for development and production, with Stripe test keys

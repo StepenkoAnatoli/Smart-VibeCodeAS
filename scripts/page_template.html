@@ -422,13 +422,17 @@ body.quiz-on #guide, body.quiz-on #empty { display: none; }
     pre.append(btn);
   });
 
-  // Checklist ticks are remembered in this browser only.
-  const ticks = document.querySelectorAll('#' + DATA.checklist + ' input[type="checkbox"]');
-  ticks.forEach((box, i) => {
-    box.disabled = false;
-    box.id = "tick-" + i;
-    box.checked = store.get("mkvc-tick-" + i) === "1";
-    box.addEventListener("change", () => store.set("mkvc-tick-" + i, box.checked ? "1" : "0"));
+  // Checklist and practice-project ticks are remembered in this browser only.
+  [DATA.checklist, DATA.practice].forEach((chId) => {
+    if (!chId) return;
+    // The checklist keeps its original keys, so ticks saved before still show.
+    const prefix = chId === DATA.checklist ? "mkvc-tick-" : "mkvc-tick-" + chId + "-";
+    document.querySelectorAll("#" + chId + ' input[type="checkbox"]').forEach((box, i) => {
+      box.disabled = false;
+      box.id = chId + "-tick-" + i;
+      box.checked = store.get(prefix + i) === "1";
+      box.addEventListener("change", () => store.set(prefix + i, box.checked ? "1" : "0"));
+    });
   });
 
   // Search and filters.

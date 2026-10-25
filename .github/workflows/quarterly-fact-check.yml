@@ -1,0 +1,44 @@
+name: Quarterly fact-check reminder
+
+on:
+  schedule:
+    # 07:23 UTC on the 1st of January, April, July and October.
+    - cron: "23 7 1 1,4,7,10 *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Open a fact-check issue, unless one is already open
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh label create fact-check --color 0E8A16 --description "Periodic accuracy review" --force
+          open=$(gh issue list --label fact-check --state open --json number --jq 'length')
+          if [ "$open" != "0" ]; then
+            echo "A fact-check issue is already open; not opening another."
+            exit 0
+          fi
+          # The body is quoted so backticks stay literal; @REPO@ becomes the repo's web address.
+          sed "s#@REPO@#${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}#" <<'BODY' |
+          Time for the quarterly fact-check. Tools, plans and rules change fast, and beginners can't tell when a guide is out of date.
+
+          Follow [FACT-CHECK.md](@REPO@/blob/main/FACT-CHECK.md):
+
+          - [ ] Run the reviewer prompt on each group of chapters, in fresh conversations with an AI that can search the web
+          - [ ] Run it on `quiz/questions.json`
+          - [ ] Confirm each finding's source before changing anything
+          - [ ] Fix the confirmed findings in one pull request, listing each finding and source
+          - [ ] Run `python3 scripts/check_guide.py --external` and `python3 scripts/build_page.py`
+          - [ ] Update the "Last fact-checked" date in the README
+          - [ ] Close this issue
+          BODY
+            gh issue create --label fact-check \
+              --title "Quarterly fact-check: $(date -u +%Y-%m)" \
+              --body-file -
