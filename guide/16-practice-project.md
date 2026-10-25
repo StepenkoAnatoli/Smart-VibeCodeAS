@@ -13,7 +13,11 @@ It's small on purpose, but it has everything that goes wrong in real apps:
 logins, private data, a limit people will try to get around, payments,
 webhooks, tests, deploys and backups.
 
-**Time:** a weekend, or a few evenings. **Cost:** free tiers are enough.
+**Time:** a weekend, or a few evenings. **Cost:** free tiers are enough, with
+two limits to know: Supabase's free plan allows **two** active projects (you'll
+use them for development and production; tests run on a local database), and
+its built-in email only reaches **members of your Supabase team**, a couple of
+times an hour (Step 4 shows how to work with that).
 **Stack:** the default from [Starting a project safely](03-starting-a-project-safely.md#1-a-sensible-default-stack):
 Next.js, Supabase, Vercel and Stripe in test mode. Your AI tool does the
 coding; you do the deciding and the checking.
@@ -119,6 +123,12 @@ how to start the app locally.
 In Supabase's auth settings, make sure email confirmation is on and the
 allowed redirect URLs include `http://localhost:3000`.
 
+Supabase's built-in email only sends to members of your Supabase team, and only
+a couple of emails an hour. So sign up with **your Supabase account's email**,
+and create any other test accounts in the dashboard instead (Authentication →
+Users → Add user, with "Auto Confirm User" ticked). Or ask your AI to help you
+connect an email provider (*custom SMTP*) first.
+
 ```
 Add sign up, email verification, log in, log out and "forgot password"
 using Supabase Auth. Server code must get the user from the verified
@@ -128,11 +138,12 @@ After login, only redirect to paths on our own site.
 
 **Check it yourself:**
 
-- [ ] Sign up with a real email address you own, click the verification link,
-      and log in
+- [ ] Sign up with your Supabase account's email, click the verification
+      link, and log in
 - [ ] Log out, press the browser's Back button, reload: you're still logged
       out
 - [ ] "Forgot password" sends a link, and the link doesn't work a second time
+      (if no email arrives, you may have hit the hourly limit: wait and retry)
 - [ ] Visit `/login?next=https://example.com`, log in, and confirm you stay on
       your own site
 
@@ -149,7 +160,10 @@ Create a migration for a notes table: id (uuid), user_id (references the
 auth user), title (text, max 200 characters), body (text, max 20,000
 characters), created_at and updated_at (timestamptz). Turn on Row Level
 Security with policies so users can only select, insert, update and delete
-their own notes (auth.uid() = user_id). Add an index on user_id. Then build
+their own notes (auth.uid() = user_id). New Supabase projects don't give the
+API access to new tables automatically, so also grant select, insert, update
+and delete on notes to the authenticated role (not to anon). Add an index on
+user_id. Then build
 the pages to list, create, edit and delete notes. Show me the migration
 before running it.
 ```
@@ -159,7 +173,10 @@ before running it.
 - [ ] In Supabase's dashboard, the `notes` table shows **RLS enabled**, with
       policies that mention `auth.uid()`
 - [ ] None of the policies is "allow everyone" (`using (true)`)
-- [ ] The migration file is saved in the repo
+- [ ] The migration file is saved in the repo, with the grant in it
+- [ ] The notes page loads without "permission denied for table notes". If you
+      see that error, the fix is the grant, **never** turning off Row Level
+      Security
 
 ---
 
@@ -168,19 +185,23 @@ before running it.
 **Goal:** Prove the lock works, from the attacker's side.
 **Uses:** [Test it like an attacker](08-logins-done-right.md#7-test-it-like-an-attacker).
 
-Create two accounts, A and B (two email addresses, or one email with `+a` and
-`+b` before the `@` if your provider supports that). Write a note as each.
+Create two accounts, A and B: yours, plus one added in the dashboard (Step 4).
+Write a note as each.
 
 ```
 Write a short script I can run that logs in as user A and tries, using the
 normal Supabase client and the publishable key, to: read user B's notes,
 update one of user B's notes by its id, delete it, and insert a note with
-user_id set to B. Print what happened for each. All four must fail.
+user_id set to B. Print what happened for each. Note that a blocked read,
+update or delete usually returns an empty result or "0 rows changed", not an
+error, so after the attempts, check (as B) that B's note still exists and is
+unchanged. All four must fail.
 ```
 
 **Check it yourself:**
 
-- [ ] All four attempts are **blocked**
+- [ ] All four attempts are **blocked**: no notes of B's returned, 0 rows
+      changed, the insert refused, and B's note still there, unchanged
 - [ ] Open note B's page URL while logged in as A: you get "not found" or "not
       allowed", never the note
 - [ ] Now the lesson: temporarily turn off RLS on the `notes` table in your
@@ -253,15 +274,18 @@ says thank you. Show me how to test it locally with the Stripe CLI.
 Set up Playwright end-to-end tests for: sign up and log in, creating /
 editing / deleting a note, the 10-note limit, and upgrading with Stripe's
 test card. Turn the Step 6 script into an automated access-control test.
-Use a separate test database. Add a GitHub Actions workflow that runs build,
-lint and all tests on every pull request.
+Use a separate test database: a local Supabase run by the Supabase CLI on my
+computer and in GitHub Actions (Supabase's free plan only allows two cloud
+projects, and dev and prod use both). Add a GitHub Actions workflow that runs
+build, lint and all tests on every pull request.
 ```
 
 **Check it yourself:**
 
 - [ ] The tests pass locally and on GitHub (green check on a pull request)
-- [ ] **Break it on purpose:** in your dev database, change the notes policy so
-      it allows everyone. The access-control test must fail. Undo it.
+- [ ] **Break it on purpose:** on a branch, change the notes policy so it
+      allows everyone (`using (true)`), apply it to the **test** database, and
+      run the tests. The access-control test must fail. Undo it.
 - [ ] No test is skipped (`.skip`) or marked `.only`
 
 ---
@@ -290,7 +314,8 @@ mode). Then open a small pull request so I can check its preview deploy.
 - [ ] A pull request gets its own preview address, which uses the **dev**
       database
 - [ ] The production project's `notes` table has RLS on (re-run the Step 6
-      script against production with two throwaway accounts)
+      script against production with two throwaway accounts created in the
+      dashboard)
 
 ---
 
@@ -326,10 +351,13 @@ Do each of these on **dev** or with test data:
       test mode), update the environment variables, redeploy, then delete the
       old key. Confirm the app still works.
 - [ ] **Bad deploy drill:** merge a small visible change, then roll back to
-      the previous deploy in Vercel. Note how long it took.
-- [ ] **Data loss drill:** export your dev database (or use a backup if your
-      plan has one), delete a few notes, then restore the export into a
-      **new** database and confirm the notes are there.
+      the previous deploy in Vercel. Note how long it took. Then click **Undo
+      Rollback** (or promote the latest deploy): until you do, Vercel won't put
+      new merges live.
+- [ ] **Data loss drill:** export your dev database (the free plan has no
+      backups, so your export is all you have), delete a few notes, then
+      restore the export into a **new** database (a local one is fine) and
+      confirm the notes are there.
 - [ ] **Write your incident kit** (`INCIDENT-PLAYBOOK.md`) with the prompt in
       [When things go wrong](13-when-things-go-wrong.md#6-copy-paste-incident-prompts).
 

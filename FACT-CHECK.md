@@ -11,6 +11,11 @@ So the guide gets an independent fact-check **every three months**. A GitHub
 Action opens a reminder issue labeled `fact-check` on the first day of January,
 April, July and October (`.github/workflows/quarterly-fact-check.yml`).
 
+GitHub switches off scheduled workflows in a public repo after 60 days without
+activity, and a quarter is longer than that. If no issue appeared, check the
+repo's **Actions** tab and re-enable the workflow (the weekly link check too),
+and put the next date in your own calendar as a backup.
+
 ## What a fact-check covers
 
 - **Product facts:** names, features, defaults and file names of the tools the

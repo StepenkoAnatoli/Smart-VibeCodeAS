@@ -49,7 +49,9 @@ development, and turning them off makes the errors disappear.
 
 **Prevent it:** Row Level Security on for every table, with policies that check
 the row belongs to the logged-in user (an "allow everyone" policy puts the hole
-right back). Then test it by trying to read another user's data. See *Broken Access Control*
+right back). If the error says "permission denied for table", what's missing on
+newer Supabase projects is a *grant* for that table, not fewer rules. Then test
+it by trying to read another user's data. See *Broken Access Control*
 in [the reel, explained](04-the-reel-explained.md#1-security).
 
 ### The admin button that was only hidden — 🔴 Now

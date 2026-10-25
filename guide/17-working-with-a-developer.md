@@ -93,13 +93,21 @@ does the job (see *IAM* in [the reel, explained](04-the-reel-explained.md#1-secu
 
 **What it means for you:**
 
-- **GitHub:** add them as a collaborator on the repo. They work in branches and
-  pull requests; you (or your rules) decide what's merged.
+- **GitHub:** add them as a collaborator on the repo. Collaborators can push
+  and merge on their own, so agree that they only open pull requests, and turn
+  on branch protection if your plan has it (on private repos it needs a paid
+  GitHub plan).
 - **Hosting, database, payments:** use each service's team or member feature,
   with a limited role where one exists.
 - **Development first:** give access to the **development** environment and
   test keys. Production access and live keys only if the job truly needs them,
-  and only for as long as it does.
+  and only for as long as it does. On Supabase's Free and Pro plans, a member
+  can see **every** project in the organization, so keep your development
+  project in its own organization and invite them only there.
+- **Vercel's free Hobby plan** has no team members, and commits by other people
+  don't deploy (so their pull requests get no preview). Either move to a paid
+  team plan for the time they work with you, or review their pull requests
+  without previews. Never share your login instead.
 - **Secrets:** share them through your host's environment settings or a
   password manager's sharing feature, never in chat or email.
 - **Keep a list** of everything you gave access to, so you can remove it later
@@ -168,7 +176,8 @@ A vague "can you take a look?" gets a vague answer. Ask for:
 ### Same rules for people and AI — 🟡 Soon
 
 - All work goes through **pull requests**, with the automatic checks passing
-  and a preview deploy you can click through.
+  and, where your hosting plan allows it, a preview deploy you can click
+  through.
 - Ask for a **plain-words summary** of every pull request: what changed, why,
   and how to check it. You can also ask your own AI to explain it (prompt below).
 - They should follow your **rules file** and keep the README and architecture
